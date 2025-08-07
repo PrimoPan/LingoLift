@@ -1,0 +1,31 @@
+buildscript {
+    ext {
+        buildToolsVersion = "35.0.0"
+        minSdkVersion = 24
+        compileSdkVersion = 35
+        targetSdkVersion = 34
+        ndkVersion = "26.1.10909125"
+        kotlinVersion = "1.9.24"
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // 为兼容老库（如 rn-fetch-blob），之后建议移除
+
+        // 以下是加速镜像
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.1.2")
+        classpath("com.facebook.react:react-native-gradle-plugin:0.76.7")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24")
+    }
+}
+
+apply plugin: "com.facebook.react.rootproject"

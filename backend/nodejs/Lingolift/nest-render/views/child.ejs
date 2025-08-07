@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>LingoLift投影端 - <%= child?.name || '儿童详情' %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+    }
+    h2, h3 {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    /* 定义淡入上移动画 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* 每条记录添加动画 */
+    .record-card {
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      transition: background-color 0.3s ease;
+      animation: fadeInUp 0.6s ease;
+    }
+    .record-card:hover {
+      background-color: #f8f9fa;
+    }
+    .record-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .record-info {
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+    .back-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+    }
+    footer {
+      margin-top: 20px;
+      color: #fff;
+      font-size: 0.9rem;
+      text-align: center;
+      width: 100%;
+    }
+    footer a {
+      color: #fff;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><%= child?.name || '未知儿童' %> 的教学记录</h2>
+    <h3>
+      主题场景: 
+      <%= child?.LearningHistory?.[0]?.['主题场景']?.major || '未知' %> - 
+      <%= child?.LearningHistory?.[0]?.['主题场景']?.activity || '未知' %>
+    </h3>
+
+    <% if (child && child.LearningHistory && child.LearningHistory.length > 0) { %>
+      <% child.LearningHistory.forEach((record, index) => { 
+           // 获取教学时间：兼容 { $date: "..." } 或 Date 字符串
+           const time = record?.createdAt?.$date ? new Date(record.createdAt.$date) : new Date(record.createdAt);
+           // 格式化为中国大陆时间：YYYY/MM/DD 上午/下午 HH:mm
+           const teachingTime = time.toLocaleString("zh-CN", { 
+             timeZone: "Asia/Shanghai", 
+             year: "numeric", 
+             month: "2-digit", 
+             day: "2-digit", 
+             hour: "2-digit", 
+             minute: "2-digit", 
+             hour12: true 
+           }) || '无数据';
+      %>
+      <a href="/teacher/record/<%= index %>?childId=<%= child?._id %>" class="record-link">
+        <div class="record-card">
+          <p><strong>教学时间：</strong> <%= teachingTime %></p>
+          <p class="record-info"><strong>主题场景：</strong>
+            <%= record?.['主题场景'] 
+                  ? (record['主题场景'].major + " - " + record['主题场景'].activity) 
+                  : '无数据' %>
+          </p>
+        </div>
+      </a>
+      <% }) %>
+    <% } else { %>
+      <div class="alert alert-info text-center">暂无教学记录</div>
+    <% } %>
+
+    <a href="/teacher/childrenlist" class="btn btn-secondary back-btn">返回儿童列表</a>
+  </div>
+
+  <footer>
+    <p>
+      © HKUST(GZ), ARK Lab, 2025<br>
+      <a href="https://arkxlab.github.io" target="_blank">访问 ARK Lab 官网</a>
+    </p>
+  </footer>
+</body>
+</html>
