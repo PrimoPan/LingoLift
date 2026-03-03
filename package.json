@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "description": "An LLM, Text-to-Image, and AR-based personalized educational system developed by ARK Lab, HKUST(GZ) for children with autism.",
-  "author": "Dongyijie Primo PAN, Ziheng TANG",
+  "author": "PrimoPan",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
