@@ -8,14 +8,14 @@ import {
     Modal,
     Image,
     Alert,
-    TextInput
+    TextInput,
 } from 'react-native';
-import useStore from "../store/store";
+import useStore from '../store/store';
 import { gptQuery, generateImage } from '../utils/api';
 
 const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     const pinyinGroupsByStage = [
-        ['b','m','d','h','p','t','g','k','n','f','j','q','x','l','z','s','r','c','zh','ch','sh']
+        ['b','m','d','h','p','t','g','k','n','f','j','q','x','l','z','s','r','c','zh','ch','sh'],
     ];
     const Goals = useStore(state => state.learningGoals) || {};
         // 如果主题场景变了，就重置本地状态
@@ -52,7 +52,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     const [selectedPinyin, setSelectedPinyin] = useState(saved.fy || getDefaultPinyin());
 
     // 教学目标
-    const [teachingGoal, setTeachingGoal] = useState(saved.teachingGoal || "");
+    const [teachingGoal, setTeachingGoal] = useState(saved.teachingGoal || '');
 
     // 单词列表，结构为：[{ word: "汉字", pinyin: "拼音" }, ...]
     const [words, setWords] = useState(saved.words || []);
@@ -72,7 +72,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     const [cards, setCards] = useState(saved.cards || []);
     // 选中卡片的索引，优先把所有 saved.cards 都标记为已选
     const [selectedCardIndices, setSelectedCardIndices] = useState(() => {
-          if (!saved.cards || !saved.words) return [];
+          if (!saved.cards || !saved.words) {return [];}
           return saved.cards
                 .map(card => {
                  const idx = saved.words.findIndex(w => w.word === card.word);
@@ -80,27 +80,26 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
                 })
             .filter(idx => idx !== null);
         });
-    +// 只同步「卡片/单词/图片/教学目标/卡片索引」，**不**再 touch selectedPinyin
-        useEffect(() => {
-              setWords(saved.words || []);
-              setImageUrls(saved.imageUrls || []);
-              setCards(saved.cards || []);
-              setTeachingGoal(saved.teachingGoal || "");
+    // 只同步「卡片/单词/图片/教学目标/卡片索引」，不覆盖用户当前选择的 selectedPinyin
+    useEffect(() => {
+        setWords(saved.words || []);
+        setImageUrls(saved.imageUrls || []);
+        setCards(saved.cards || []);
+        setTeachingGoal(saved.teachingGoal || '');
 
-                  // 重新计算选中索引，**注意** 去掉多余的 `+`
-            if (saved.cards && saved.words) {
-                    setSelectedCardIndices(
-                         saved.cards
-                            .map(card => {
-                              const idx = saved.words.findIndex(w => w.word === card.word);
-                              return idx >= 0 ? idx : null;
-                            })
-                        .filter(idx => idx !== null)
-                    );
-                  } else {
-                    setSelectedCardIndices([]);
-                  }
-            }, [saved.words, saved.cards, saved.imageUrls, saved.teachingGoal]);
+        if (saved.cards && saved.words) {
+            setSelectedCardIndices(
+                saved.cards
+                    .map(card => {
+                        const idx = saved.words.findIndex(w => w.word === card.word);
+                        return idx >= 0 ? idx : null;
+                    })
+                    .filter(idx => idx !== null)
+            );
+        } else {
+            setSelectedCardIndices([]);
+        }
+    }, [saved.words, saved.cards, saved.imageUrls, saved.teachingGoal]);
     // ====================================
     // 1. 拉取教学目标
     // ====================================
@@ -111,7 +110,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
             setTeachingGoal(result);
             setGoalGenerated(true);
         } catch (error) {
-            Alert.alert("Error", error.message);
+            Alert.alert('Error', error.message);
         }
     };
 
@@ -148,7 +147,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
             setCards([]);
             setSelectedCardIndices([]);
         } catch (error) {
-            Alert.alert("Error", error.message);
+            Alert.alert('Error', error.message);
         }
     };
 
@@ -170,7 +169,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
             // match 出汉字与拼音，示例: "小狗(xiǎo gǒu)"
             const match = formattedResult.match(/(.+?)\s*\(([^)]+)\)/);
             if (!match) {
-                Alert.alert("Error", "GPT 返回的单词格式无法解析。");
+                Alert.alert('Error', 'GPT 返回的单词格式无法解析。');
                 return;
             }
             const [newWord, newPinyin] = match.slice(1).map(s => s.trim());
@@ -205,14 +204,14 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
                     updated[existingIndex] = {
                         word: newWord,
                         pinyin: newPinyin,
-                        image: null
+                        image: null,
                     };
                 }
                 return updated;
             });
 
         } catch (error) {
-            Alert.alert("Error", error.message);
+            Alert.alert('Error', error.message);
         }
     };
 
@@ -226,7 +225,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
             const updated = [...prev];
             updated[index] = {
                 ...updated[index],
-                word: text
+                word: text,
             };
             return updated;
         });
@@ -238,7 +237,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
             if (existingIndex !== -1) {
                 updated[existingIndex] = {
                     ...updated[existingIndex],
-                    word: text
+                    word: text,
                 };
             }
             return updated;
@@ -273,7 +272,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
                 const updated = [...prev];
                 updated[index] = {
                     ...updated[index],
-                    pinyin: newPinyin
+                    pinyin: newPinyin,
                 };
                 return updated;
             });
@@ -290,7 +289,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
 
         } catch (error) {
             // 可以根据需要弹个 alert
-            Alert.alert("Error", "自动获取拼音失败：" + error.message);
+            Alert.alert('Error', '自动获取拼音失败：' + error.message);
         }
     };
 
@@ -299,7 +298,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     // ====================================
     const generateWordImage = async (word, index) => {
         if (!word || !word.trim()) {
-            Alert.alert("提示", "请先输入要生成图片的单词");
+            Alert.alert('提示', '请先输入要生成图片的单词');
             return;
         }
 
@@ -331,7 +330,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
             });
 
         } catch (error) {
-            Alert.alert("Error", "生成图片失败");
+            Alert.alert('Error', '生成图片失败');
         } finally {
             setLoadingStates(prev => {
                 const updated = [...prev];
@@ -347,7 +346,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     const handleSelectCard = (index) => {
         const wordItem = words[index];
         const imageUrl = imageUrls[index];
-        if (!wordItem) return;
+        if (!wordItem) {return;}
 
         setCards(prevCards => {
             const existingIndex = prevCards.findIndex(card => card.word === wordItem.word);
@@ -361,7 +360,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
                 return [...prevCards, {
                     word: wordItem.word,
                     pinyin: wordItem.pinyin,
-                    image: imageUrl || null
+                    image: imageUrl || null,
                 }];
             }
         });
@@ -378,14 +377,15 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     // 7. 当 cards/teachingGoal/selectedPinyin 改变，就往父组件回调
     // ====================================
     useEffect(() => {
-                handleGy({
-                        fy: selectedPinyin,
-                        teachingGoal,
-                        words,
-                        imageUrls,
-                    cards
-                });
-            }, [selectedPinyin, teachingGoal, words, imageUrls, cards]);    // ====================================
+        handleGy({
+            fy: selectedPinyin,
+            teachingGoal,
+            words,
+            imageUrls,
+            cards,
+        });
+    }, [selectedPinyin, teachingGoal, words, imageUrls, cards, handleGy]);
+    // ====================================
     // 8. 渲染：拼音选择器
     // ====================================
     const renderPinyinSelector = () => {
@@ -438,7 +438,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
                             const updated = [...prev];
                             updated[index] = {
                                 ...updated[index],
-                                pinyin: newPinyin
+                                pinyin: newPinyin,
                             };
                             return updated;
                         });
@@ -480,7 +480,7 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
                         <TouchableOpacity
                             style={[
                                 styles.selectButton,
-                                selectedCardIndices.includes(index) && styles.selectedBackground
+                                selectedCardIndices.includes(index) && styles.selectedBackground,
                             ]}
                             onPress={() => handleSelectCard(index)}
                         >
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
         padding: 8,
         margin: 5,
         alignItems: 'center',
-        backgroundColor: '#F7FBFF'
+        backgroundColor: '#F7FBFF',
     },
     textInput: {
         width: '100%',
@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
         padding: 4,
         fontSize: 14,
         marginBottom: 6,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     smallButton: {
         backgroundColor: '#39B8FF',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -6,11 +6,11 @@ import {
     TouchableOpacity,
     StyleSheet,
     ActivityIndicator,
-    Alert
-} from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
-import { getLearningHistoryForChild } from "../services/api";
-import useStore from "../store/store";
+    Alert,
+} from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { getLearningHistoryForChild } from '../services/api';
+import useStore from '../store/store';
 import dayjs from 'dayjs';
 
 const moduleColors = {
@@ -36,30 +36,30 @@ const ChildHistory = () => {
                 const res = await getLearningHistoryForChild(childName);
                 setHistoryList(res.data || []);
             } catch (err) {
-                Alert.alert("错误", "无法获取历史记录");
+                Alert.alert('错误', '无法获取历史记录');
             } finally {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [childName]);
 
     // 根据 record 中真实字段判断模块
     const getModulesForRecord = (record) => {
         const modules = [];
-        if (record.构音?.cards?.length > 0) modules.push("构音");
-        if (record.命名?.detail?.length > 0) modules.push("命名");
-        if (record["语言结构"]?.detail?.length > 0) modules.push("语言结构");
-        if (record["对话"]?.detail?.length > 0) modules.push("对话");
+        if (record.构音?.cards?.length > 0) {modules.push('构音');}
+        if (record.命名?.detail?.length > 0) {modules.push('命名');}
+        if (record['语言结构']?.detail?.length > 0) {modules.push('语言结构');}
+        if (record['对话']?.detail?.length > 0) {modules.push('对话');}
         return modules;
     };
 
     const handleSelectRecord = (record) => {
         setLearningGoals(record);
-        navigation.navigate("Draft", { mode: "final" });
+        navigation.navigate('Draft', { mode: 'final' });
     };
 
     const renderItem = ({ item }) => {
-        const time = dayjs(item.createdAt).format("YYYY-MM-DD HH:mm");
+        const time = dayjs(item.createdAt).format('YYYY-MM-DD HH:mm');
         const modules = getModulesForRecord(item);
         return (
             <TouchableOpacity
@@ -114,9 +114,9 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 22,
-        fontWeight: "bold",
-        color: "#1C5B83",
-        textAlign: "center",
+        fontWeight: 'bold',
+        color: '#1C5B83',
+        textAlign: 'center',
         marginVertical: 16,
     },
     historyCard: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     backButton: {
-        position: "absolute",
+        position: 'absolute',
         bottom: 20,
         alignSelf: 'center',
         backgroundColor: '#1C5B83',

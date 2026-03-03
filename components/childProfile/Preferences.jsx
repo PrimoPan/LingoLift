@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import useStore from '../../src/store/store';
-import { generateImage } from "../../src/utils/api";
-import { cacheImage } from "../../src/utils/imageCache";
+import { generateImage } from '../../src/utils/api';
+import { cacheImage } from '../../src/utils/imageCache';
 import RNFetchBlob from 'rn-fetch-blob';
-import { changeChildrenInfo } from "../../src/services/api";
+import { changeChildrenInfo } from '../../src/services/api';
 
 const Preferences = () => {
   const { currentChildren } = useStore();
@@ -13,11 +13,11 @@ const Preferences = () => {
   const [localExistsMap, setLocalExistsMap] = useState({});
 
   // 处理图片生成
-  const handleGenerateImages = async () => {
+  const handleGenerateImages = useCallback(async () => {
     try {
       // 找出没有 image 字段的条目需要生成图片
       const needGenerate = reinforcements.filter(item => !item.image);
-      if (needGenerate.length === 0) return;
+      if (needGenerate.length === 0) {return;}
 
       // 设置加载状态
       setLoadingMap(prev => ({
@@ -25,7 +25,7 @@ const Preferences = () => {
         ...needGenerate.reduce((acc, item) => {
           acc[item.id] = true;
           return acc;
-        }, {})
+        }, {}),
       }));
 
       const generatePrompt = (itemValue, style) => {
@@ -66,7 +66,7 @@ const Preferences = () => {
             image: {
               uri: localUri,
               remote: remoteUrl,
-            }
+            },
           });
         } catch (error) {
           console.error('生成失败:', item.value, error);
@@ -87,8 +87,8 @@ const Preferences = () => {
           ...i,
           image: i.image
               ? { uri: i.image.uri, remote: i.image.remote }
-              : undefined
-        }))
+              : undefined,
+        })),
       });
 
       // 上传给后端时只带 remote，不带本地uri
@@ -97,8 +97,8 @@ const Preferences = () => {
         reinforcements: merged.map(i => ({
           ...i,
           // 这里只传给后端 remote 就可以了，本地 uri 留在客户端用
-          image: i.image ? { remote: i.image.remote } : undefined
-        }))
+          image: i.image ? { remote: i.image.remote } : undefined,
+        })),
       };
       await changeChildrenInfo(childrenForUpload);
 
@@ -107,15 +107,17 @@ const Preferences = () => {
     } finally {
       setLoadingMap({});
     }
-  };
+  }, [currentChildren, imageStyle, reinforcements]);
 
 
   // 当 reinforcements 或 imageStyle 变化时，自动生成图片
   useEffect(() => {
     if (reinforcements?.length > 0) {
-      handleGenerateImages();
+      handleGenerateImages().catch((error) => {
+        console.error('自动生成强化物图片失败:', error);
+      });
     }
-  }, [reinforcements, imageStyle]);
+  }, [handleGenerateImages, reinforcements]);
 
   // 检查本地文件是否存在
   useEffect(() => {

@@ -9,23 +9,18 @@ import {
     ScrollView,
     Image,
 } from 'react-native';
-import useStore from "../store/store.jsx";
-import { gptQuery } from "../utils/api";
+import useStore from '../store/store.jsx';
+import { gptQuery } from '../utils/api';
 
 const Naming = ({viewMode}) => {
     const { name } = useStore(state => state.currentChildren);
     const { learningGoals, setLearningGoals, setModuleFlag } = useStore();
-    const isFinal = viewMode === "final";
+    const isFinal = viewMode === 'final';
     const [loading, setLoading] = useState(false);
     const [planContent, setPlanContent] = useState('');
     const [editing, setEditing] = useState(false);
     const [editableContent, setEditableContent] = useState('');
     const namingDetails = learningGoals?.命名?.detail || [];
-    useEffect(() => {
-        console.log("Goals", learningGoals);
-        console.log(isFinal);
-        console.log(viewMode);
-    }, []);
 
     // 处理卡片素材字符串
     const cardsContent = learningGoals?.构音?.cards

@@ -9,7 +9,7 @@ import {
     Alert,
 } from 'react-native';
 import useStore from '../store/store';
-import {useNavigation} from "@react-navigation/native";
+import {useNavigation} from '@react-navigation/native';
 const skillsData = [
     { name: '构音', color: '#44DCF8' },
     { name: '命名', color: '#FCC40B' },
@@ -64,7 +64,7 @@ const ModelSelect = ({ visible, onClose, onSubmit }) => {
         // 从 store 中获取 currentChildren 数据
         const { currentChildren } = useStore.getState();
 
-        if (submitting) return;
+        if (submitting) {return;}
         setSubmitting(true);
         console.log(currentChildren);
         // 遍历所有技能，若被选中，则构造 data 对象

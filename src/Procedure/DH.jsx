@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import DHSection from './DHSection';
-import useStore from "../store/store";
+import useStore from '../store/store';
 import vbMappData from '../Knowledge/VBMapp.json';
 
 const DH = ({ onSelectGoal }) => {
@@ -11,12 +11,12 @@ const DH = ({ onSelectGoal }) => {
     let goals = [
         {
             title: '复习目标',
-            code: 'IV'+ (level-1),
-            description: getRandomOne('对话',level-1),
+            code: 'IV' + (level - 1),
+            description: getRandomOne('对话',level - 1),
         },
         {
             title: '新学习目标',
-            code: 'IV'+(level),
+            code: 'IV' + (level),
             description: getRandomOne('对话',level),
         },
         {

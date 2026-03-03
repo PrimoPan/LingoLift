@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import GoalSectionLan from './GoSectionLan';
-import useStore from "../store/store";
+import useStore from '../store/store';
 import vbMappData from '../Knowledge/VBMapp.json';
 
 const Language = ({onSelectGoal}) => {
@@ -11,12 +11,12 @@ const Language = ({onSelectGoal}) => {
     const goals = [
         {
             title: '复习目标',
-            code: 'LS'+ (level-1),
-            description: getRandomOne('语言结构',level-1),
+            code: 'LS' + (level - 1),
+            description: getRandomOne('语言结构',level - 1),
         },
         {
             title: '新学习目标',
-            code: 'LS'+(level),
+            code: 'LS' + (level),
             description: getRandomOne('语言结构',level),
         },
         {

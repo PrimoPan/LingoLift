@@ -4,56 +4,56 @@ import { Text, View, StyleSheet } from 'react-native';
 const LearningTitle = ({ selectedTheme, onSelect, onChangeStep, availableModules = [] }) => {
     return (
         <View style={styles.textRow}>
-            {availableModules.includes("构音模块") && (
+            {availableModules.includes('构音模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "构音模块" && styles.selected
+                        selectedTheme === '构音模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("构音模块");
+                        onSelect('构音模块');
                         onChangeStep(0); // Set currentStep to 0
                     }}
                 >
                     构音模块
                 </Text>
             )}
-            {availableModules.includes("命名模块") && (
+            {availableModules.includes('命名模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "命名模块" && styles.selected
+                        selectedTheme === '命名模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("命名模块");
+                        onSelect('命名模块');
                         onChangeStep(1); // Set currentStep to 1
                     }}
                 >
                     命名模块
                 </Text>
             )}
-            {availableModules.includes("语言结构模块") && (
+            {availableModules.includes('语言结构模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "语言结构模块" && styles.selected
+                        selectedTheme === '语言结构模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("语言结构模块");
+                        onSelect('语言结构模块');
                         onChangeStep(2); // Set currentStep to 2
                     }}
                 >
                     语言结构模块
                 </Text>
             )}
-            {availableModules.includes("对话模块") && (
+            {availableModules.includes('对话模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "对话模块" && styles.selected
+                        selectedTheme === '对话模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("对话模块");
+                        onSelect('对话模块');
                         onChangeStep(3); // Set currentStep to 3
                     }}
                 >

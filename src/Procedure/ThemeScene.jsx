@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -36,12 +36,12 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
     /* ----- 解析 GPT 返回 ----- */
     const parseScenes = (resp) => {
         const match = resp.match(/\[.*?\]/);
-        if (!match) throw new Error('格式异常');
+        if (!match) {throw new Error('格式异常');}
         return JSON.parse(match[0].replace(/'/g, '"'));
     };
 
     /* ----- 拉取场景列表 ----- */
-    const loadScenes = async () => {
+    const loadScenes = useCallback(async () => {
         setSceneLoading(true);
         setSelectedScene(null);
         setImageUrl(null);
@@ -63,13 +63,15 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
         } finally {
             setSceneLoading(false);
         }
-    };
+    }, [selectedMajor, setSceneCache]);
 
     /* ----- major 变化：1) 有 cache 则直接用 2) 否则重新加载 ----- */
     useEffect(() => {
-        if (!selectedMajor) return;
+        if (!selectedMajor) {return;}
         if (!sceneCache[selectedMajor]) {
-            loadScenes();
+            loadScenes().catch((error) => {
+                Alert.alert('错误', error.message || '加载场景失败');
+            });
         } else {
             // 已缓存但可能是上一位学生修改过 -> 同步给父组件
             if (sceneCache[selectedMajor].imageUrl) {
@@ -79,7 +81,7 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
                 );
             }
         }
-    }, [selectedMajor]);
+    }, [loadScenes, onSelectScene, sceneCache, selectedMajor]);
 
     /* ----- 选择场景并生成图片 ----- */
     const handleSelectScene = async (scene) => {
@@ -106,7 +108,7 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
 
     /* ----- 自定义描述重新生成 ----- */
     const handleRegenerate = async () => {
-        if (!customDescription.trim()) return;
+        if (!customDescription.trim()) {return;}
         setImageLoading(true);
         setSelectedScene(customDescription);
         setImageUrl(null);
@@ -129,7 +131,7 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
     /* ----- 场景按钮渲染 ----- */
     const sceneButtons = () => {
         if (sceneLoading)
-            return <ActivityIndicator size="small" color="#39B8FF" />;
+            {return <ActivityIndicator size="small" color="#39B8FF" />;}
         return availableScenes.map((sc) => (
             <TouchableOpacity
                 key={sc}

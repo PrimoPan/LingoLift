@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -39,7 +39,7 @@ const DisplayStoreData = () => {
     };
 
     // 生成 GPT 文本
-    const generateData = async () => {
+    const generateData = useCallback(async () => {
         setLoading(true);
         try {
             const prompt = `请你给我的数据直接以{}包裹，不需要其他任何文字内容.每一次生成的内容与教学步骤不允许与上次一样.每一个步骤都必须详细，且包含三个递进步骤.每一个步骤不得少于50字. 注意一切生成内容要以选中场景与“环境”的描述为优先.1. 如果教学目标里有构音，请生成5个汉语词汇，包含用构音中的几个汉语拼音声母构成的词语，如果 Current Children中有强化物，请结合这些强化物做生成； 2. 根据选中场景中的描述，根据LearningGoals中的‘命名’、‘构音’、‘语言结构’（如果有就生成，如果没有就不生成），返回满足每个对应目标的，和场景结合的教学步骤（注意被教学儿童患有自闭症），每个目标返回A,B,C依次3个步骤。当前数据Current Children: ${JSON.stringify(currentChildren).replace(/"/g, "'")}, Learning Goals: ${JSON.stringify(learningGoals).replace(/"/g, "'")}`;
@@ -58,7 +58,7 @@ const DisplayStoreData = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentChildren, learningGoals]);
 
     // 生成图片
     const generateImages = async () => {
@@ -91,8 +91,10 @@ const DisplayStoreData = () => {
 
     useEffect(() => {
         // 当 currentChildren 或 learningGoals 改变时，自动重新生成
-        generateData();
-    }, [currentChildren, learningGoals]);
+        generateData().catch((error) => {
+            console.error('自动生成教学数据失败:', error);
+        });
+    }, [generateData]);
 
     return (
         <View style={styles.container}>

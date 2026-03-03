@@ -66,9 +66,9 @@ const Procedure = () => {
     // 1. 根据 flags / learningGoals 更新导航标签
     useEffect(() => {
         const mods = ['学习主题', '主题场景', '构音模块'];
-        if (moduleFlags.命名 || learningGoals?.命名) mods.push('命名模块');
-        if (moduleFlags.语言结构 || learningGoals?.语言结构) mods.push('语言结构模块');
-        if (moduleFlags.对话 || learningGoals?.对话) mods.push('对话模块');
+        if (moduleFlags.命名 || learningGoals?.命名) {mods.push('命名模块');}
+        if (moduleFlags.语言结构 || learningGoals?.语言结构) {mods.push('语言结构模块');}
+        if (moduleFlags.对话 || learningGoals?.对话) {mods.push('对话模块');}
         setAvailableModules(mods);
     }, [learningGoals, moduleFlags]);
 

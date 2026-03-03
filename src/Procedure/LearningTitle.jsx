@@ -4,84 +4,84 @@ import { Text, View, StyleSheet } from 'react-native';
 const LearningTitle = ({ selectedTheme, onSelect, onChangeStep, availableModules }) => {
     return (
         <View style={styles.textRow}>
-            {availableModules.includes("学习主题") && (
+            {availableModules.includes('学习主题') && (
                 <Text
                     style={[
                         styles.themeTitle,
-                        selectedTheme === "学习主题" && styles.selected
+                        selectedTheme === '学习主题' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("学习主题");
+                        onSelect('学习主题');
                         onChangeStep(0); // Set currentStep to 0
                     }}
                 >
                     学习主题
                 </Text>
             )}
-            {availableModules.includes("主题场景") && (
+            {availableModules.includes('主题场景') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "主题场景" && styles.selected
+                        selectedTheme === '主题场景' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("主题场景");
+                        onSelect('主题场景');
                         onChangeStep(1); // Set currentStep to 1
                     }}
                 >
                     主题场景
                 </Text>
             )}
-            {availableModules.includes("构音模块") && (
+            {availableModules.includes('构音模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "构音模块" && styles.selected
+                        selectedTheme === '构音模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("构音模块");
+                        onSelect('构音模块');
                         onChangeStep(2); // Set currentStep to 2
                     }}
                 >
                     构音模块
                 </Text>
             )}
-            {availableModules.includes("命名模块") && (
+            {availableModules.includes('命名模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "命名模块" && styles.selected
+                        selectedTheme === '命名模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("命名模块");
+                        onSelect('命名模块');
                         onChangeStep(3); // Set currentStep to 3
                     }}
                 >
                     命名模块
                 </Text>
             )}
-            {availableModules.includes("语言结构模块") && (
+            {availableModules.includes('语言结构模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "语言结构模块" && styles.selected
+                        selectedTheme === '语言结构模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("语言结构模块");
+                        onSelect('语言结构模块');
                         onChangeStep(4); // Set currentStep to 4
                     }}
                 >
                     语言结构模块
                 </Text>
             )}
-            {availableModules.includes("对话模块") && (
+            {availableModules.includes('对话模块') && (
                 <Text
                     style={[
                         styles.moduleTitle,
-                        selectedTheme === "对话模块" && styles.selected
+                        selectedTheme === '对话模块' && styles.selected,
                     ]}
                     onPress={() => {
-                        onSelect("对话模块");
+                        onSelect('对话模块');
                         onChangeStep(5); // Set currentStep to 5
                     }}
                 >

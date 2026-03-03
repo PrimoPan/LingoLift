@@ -12,6 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "bundler"
   }
 }

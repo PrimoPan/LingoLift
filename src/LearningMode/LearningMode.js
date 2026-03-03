@@ -86,10 +86,10 @@ const LearningMode = () => {
         const learningGoals = {
             构音: moduleSelections.pinyin && selectedInitials.length > 0
                 ? selectedInitials.join(', ')
-                : "无",
-            命名: moduleSelections.naming ? namingSolution || "无" : "无",
-            语言结构: moduleSelections.structure ? structureSolution || "无" : "无",
-            对话: moduleSelections.dialogue ? dialogueSolution || "无" : "无",
+                : '无',
+            命名: moduleSelections.naming ? namingSolution || '无' : '无',
+            语言结构: moduleSelections.structure ? structureSolution || '无' : '无',
+            对话: moduleSelections.dialogue ? dialogueSolution || '无' : '无',
         };
 
         // 更新 learningGoals

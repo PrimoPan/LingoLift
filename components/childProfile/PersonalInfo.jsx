@@ -11,7 +11,7 @@ const PersonalInfo = () => {
     navigation.navigate('CreateChildren');
   };
   const handleViewHistory = () => {
-    navigation.navigate("ChildHistory", { childName: name });
+    navigation.navigate('ChildHistory', { childName: name });
   };
 
 

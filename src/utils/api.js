@@ -1,10 +1,10 @@
 // utils/api.js
 
-import axios from 'axios'
-import useStore from '../store/store' // 根据项目实际路径调整
+import axios from 'axios';
+import useStore from '../store/store'; // 根据项目实际路径调整
 
 // 配置 API 基础 URL
-const BASE_URL = 'http://47.242.78.104:6088'
+const BASE_URL = 'evn.secret';
 
 /**
  * GPT 问答接口
@@ -18,11 +18,11 @@ export const gptQuery = async (rawQuestion) => {
         .trim()                    // 去首尾空格
         .replace(/\n/g, '\\n');    // 若还有 \n，转义成字面量
     if (!question) {
-        throw new Error('问题不能为空')
+        throw new Error('问题不能为空');
     }
 
     try {
-        console.log('gptQuery prompt:', question)
+        console.log('gptQuery prompt:', question);
         const response = await axios.post(
             `${BASE_URL}/i/gpt`,
             {
@@ -33,17 +33,17 @@ export const gptQuery = async (rawQuestion) => {
             {
                 headers: { 'Content-Type': 'application/json' },
             }
-        )
-        const { data } = response.data
+        );
+        const { data } = response.data;
         if (!data) {
-            throw new Error('接口未返回回答')
+            throw new Error('接口未返回回答');
         }
-        return data
+        return data;
     } catch (err) {
-        console.error('gptQuery 错误:', err)
-        throw new Error(err.response?.data?.message || '请求 GPT 失败')
+        console.error('gptQuery 错误:', err);
+        throw new Error(err.response?.data?.message || '请求 GPT 失败');
     }
-}
+};
 
 /**
  * 图像生成接口
@@ -51,29 +51,29 @@ export const gptQuery = async (rawQuestion) => {
  * @returns {Promise<string>} - 返回生成的图片 URL
  */
 export const generateImage = async (description) => {
-    const desc = description.trim()
+    const desc = description.trim();
     if (!desc) {
-        throw new Error('图片描述不能为空')
+        throw new Error('图片描述不能为空');
     }
 
     // 读取全局 store 中当前儿童的 imageStyle
-    const { currentChildren } = useStore.getState()
-    const imageStyle = currentChildren.imageStyle  // 可能是 "cartoon" 或 "realistic"
+    const { currentChildren } = useStore.getState();
+    const imageStyle = currentChildren.imageStyle;  // 可能是 "cartoon" 或 "realistic"
 
     // 接口要求的 style 值：默认 "ertonghuiben"，写实时 "xieshi"
-    const style = imageStyle === 'realistic' ? 'xieshi' : 'ertonghuiben'
-    console.log('使用的生图 style:', style)
+    const style = imageStyle === 'realistic' ? 'xieshi' : 'ertonghuiben';
+    console.log('使用的生图 style:', style);
 
     // 根据 style 决定前缀
-    let prefix = ''
+    let prefix = '';
     if (imageStyle === 'cartoon') {
-        prefix = '卡通风格！'
+        prefix = '卡通风格！';
     } else if (imageStyle === 'realistic') {
-        prefix = '风格为摄影风格'
+        prefix = '风格为摄影风格';
     }
 
-    const finalPrompt = `${prefix}${desc}`
-    console.log('generateImage prompt:', finalPrompt)
+    const finalPrompt = `${prefix}${desc}`;
+    console.log('generateImage prompt:', finalPrompt);
 
     try {
         console.log('style', style);
@@ -87,13 +87,13 @@ export const generateImage = async (description) => {
             {
                 headers: { 'Content-Type': 'application/json' },
             }
-        )
+        );
         if (response.data.code !== 0 || !response.data.imgurl) {
-            throw new Error('接口未返回有效的图片 URL')
+            throw new Error('接口未返回有效的图片 URL');
         }
-        return response.data.imgurl
+        return response.data.imgurl;
     } catch (err) {
-        console.error('generateImage 错误:', err)
-        throw new Error(err.response?.data?.message || '生成图片失败')
+        console.error('generateImage 错误:', err);
+        throw new Error(err.response?.data?.message || '生成图片失败');
     }
-}
+};

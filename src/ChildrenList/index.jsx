@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     StyleSheet,
-    Alert
+    Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getChildrenList, getChildDetails } from '../services/api'; // ✅ 导入API
@@ -29,8 +29,8 @@ const ChildrenList = () => {
             const response = await getChildrenList();
             setChildren(response.data);
         } catch (error) {
-            console.error("❌ 获取儿童列表失败:", error);
-            Alert.alert("错误", "无法获取儿童列表");
+            console.error('❌ 获取儿童列表失败:', error);
+            Alert.alert('错误', '无法获取儿童列表');
         } finally {
             setLoading(false);
         }
@@ -41,10 +41,10 @@ const ChildrenList = () => {
         try {
             const response = await getChildDetails(childName); // 从服务器获取详细信息
             setCurrentChildren(response.data); // ✅ 更新 Zustand 的 currentChildren
-            navigation.navigate("CreateChildren"); // ✅ 跳转到 CreateChildren 组件
+            navigation.navigate('CreateChildren'); // ✅ 跳转到 CreateChildren 组件
         } catch (error) {
-            console.error("❌ 获取儿童详情失败:", error);
-            Alert.alert("错误", "无法加载儿童信息");
+            console.error('❌ 获取儿童详情失败:', error);
+            Alert.alert('错误', '无法加载儿童信息');
         }
     };
 
@@ -86,7 +86,7 @@ const ChildrenList = () => {
                     style={styles.createButton}
                     onPress={() => {
                         setCurrentChildren({}); // ✅ 清空 currentChildren，进入新建模式
-                        navigation.navigate("CreateChildren");
+                        navigation.navigate('CreateChildren');
                     }}
                 >
                     <Text style={styles.createButtonText}>创建儿童信息</Text>

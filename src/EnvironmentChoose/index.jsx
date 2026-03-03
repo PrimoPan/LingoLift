@@ -52,7 +52,7 @@ const EnvironmentChoose = () => {
     const handleSubmit = () => {
         const updatedGoals = {
             ...learningGoals,
-            环境: selectedItem || "无",
+            环境: selectedItem || '无',
         };
         setLearningGoals(updatedGoals);
         Alert.alert('提交成功', JSON.stringify(updatedGoals, null, 2));

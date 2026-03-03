@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import GoalSection from './GoalSection';
-import useStore from "../store/store";
+import useStore from '../store/store';
 import vbMappData from '../Knowledge/VBMapp.json';
 
 const Naming = ({ onSelectGoal }) => {
@@ -13,12 +13,12 @@ const Naming = ({ onSelectGoal }) => {
     // 随机函数
     function getRandomOne(domain, lvl) {
         const n = parseInt(lvl, 10);
-        if (isNaN(n) || n < 1 || n > 15) return null;
+        if (isNaN(n) || n < 1 || n > 15) {return null;}
         const key = String(n).padStart(2, '0') + '-M';
         const arr = vbMappData[domain]?.[key] || [];
-        if (!arr.length) return null;
+        if (!arr.length) {return null;}
         const subset = arr.slice(0, arr.length - 1);
-        if (!subset.length) return null;
+        if (!subset.length) {return null;}
         const idx = Math.floor(Math.random() * subset.length);
         const item = subset[idx];
         return Object.values(item).map(v => String(v));
@@ -52,7 +52,7 @@ const Naming = ({ onSelectGoal }) => {
             setSelectedGoals([]);
             onSelectGoal?.([]);
         }
-    }, []);
+    }, [onSelectGoal, saved.length]);
 
     // 点击切换选中/取消
     const handleGoalSelect = (goal) => {

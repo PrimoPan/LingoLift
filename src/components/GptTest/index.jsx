@@ -9,7 +9,7 @@ const GptTest = () => {
         setLoading(true);
         try {
             // 调用 GPT 接口生成描述
-            const prompt = "生成三个描述，每个描述用于图片生成。";
+            const prompt = '生成三个描述，每个描述用于图片生成。';
             const response = await gptQuery(prompt);
             const descriptions = JSON.parse(response)?.response || [];
 

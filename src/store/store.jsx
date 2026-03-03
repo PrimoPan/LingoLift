@@ -14,7 +14,7 @@ const useStore = create((set, get) => ({
     /* ========== 儿童信息 ========== */
     currentChildren: {},
     setCurrentChildren: (data) => {
-        if (JSON.stringify(get().currentChildren) === JSON.stringify(data)) return;
+        if (JSON.stringify(get().currentChildren) === JSON.stringify(data)) {return;}
            set({
                  currentChildren: {
                   ...data,
@@ -30,7 +30,7 @@ const useStore = create((set, get) => ({
     /* ========== 学习目标（主数据） ========== */
     learningGoals: null,
     setLearningGoals: (goals) => {
-        if (JSON.stringify(get().learningGoals) === JSON.stringify(goals)) return;
+        if (JSON.stringify(get().learningGoals) === JSON.stringify(goals)) {return;}
         set({ learningGoals: goals });
     },
 

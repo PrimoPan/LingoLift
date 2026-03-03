@@ -1,4 +1,4 @@
-import {ChildProfile} from "../../components/childProfile/ChildProfile";
+import {ChildProfile} from '../../components/childProfile/ChildProfile';
 
 // @ts-ignore
 export function Debug() {

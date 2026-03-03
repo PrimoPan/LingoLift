@@ -43,9 +43,9 @@ const LanguageMilestones = () => {
         month: `${selectedInitials.length}/21`,
         bars: Array.from({ length: 5 }, (_, i) =>
             i < Math.floor((selectedInitials.length / 21) * 5)
-        )
+        ),
       },
-      backgroundColor: '#44DCF8'
+      backgroundColor: '#44DCF8',
     },
     {
       title: '命名',
@@ -54,9 +54,9 @@ const LanguageMilestones = () => {
         month: `${命名}-M`,
         bars: Array.from({ length: 5 }, (_, i) =>
             i < Math.min(Math.floor(命名 / 3), 5)
-        )
+        ),
       },
-      backgroundColor: '#FCC40B'
+      backgroundColor: '#FCC40B',
     },
     {
       title: '语言结构',
@@ -65,9 +65,9 @@ const LanguageMilestones = () => {
         month: `${语言结构}-M`,
         bars: Array.from({ length: 5 }, (_, i) =>
             i < Math.min(Math.floor(语言结构 / 3), 5)
-        )
+        ),
       },
-      backgroundColor: '#FF7A69'
+      backgroundColor: '#FF7A69',
     },
     {
       title: '对话',
@@ -76,10 +76,10 @@ const LanguageMilestones = () => {
         month: `${对话}-M`,
         bars: Array.from({ length: 5 }, (_, i) =>
             i < Math.min(Math.floor(对话 / 3), 5)
-        )
+        ),
       },
-      backgroundColor: '#0ED89E'
-    }
+      backgroundColor: '#0ED89E',
+    },
   ];
 
   return (

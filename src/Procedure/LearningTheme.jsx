@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     },
     selectedText: {
         color: '#39B8FF',  // High light color for selected module
-    }
+    },
 });
 
 export default LearningTheme;

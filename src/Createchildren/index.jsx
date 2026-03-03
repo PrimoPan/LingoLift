@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
-  Dimensions,
-  Image,
   ScrollView,
 } from 'react-native';
 
@@ -17,8 +15,8 @@ import {
 import useStore from '../store/store';
 import { useNavigation } from '@react-navigation/native';
 import PinyinSelector from '../components/PinyinSelector';
-import { changeChildrenInfo } from "../services/api";
-import ImagePicker from "./ImagePicker.jsx"
+import { changeChildrenInfo } from '../services/api';
+import ImagePicker from './ImagePicker.jsx';
 
 const CreateChildren = () => {
   const navigation = useNavigation();
@@ -47,11 +45,6 @@ const CreateChildren = () => {
   const [base64Image, setBase64Image] = useState('');
   // 图片占位
   const [childImage, setChildImage] = useState(currentChildren?.childImage || '');
-  useEffect(() => {
-    return () => {
-      console.log(currentChildren);
-    };
-  },[]);
 
   // =============== 强化物逻辑 ===============
   // 每条新 Reinforcement 带上 categoryIndex，避免删除串行
@@ -78,25 +71,15 @@ const CreateChildren = () => {
     setReinforcements(updated);
   };
 
-  // =============== 上传头像逻辑 (仅示例) ===============
-  const handleOpenCamera = () => {
-    // 若需要真机拍照，可使用 react-native-image-picker:
-    // launchCamera({ mediaType: 'photo' }, (res) => { ... })
-    Alert.alert(
-        '提示',
-        '这里可以调用相机/相册逻辑，拍摄或选择图片后更新 childImage。'
-    );
-  };
-
   // =============== 提交 ===============
   const handleSubmit = async () => {
     if (!name || !age || !gender || !courseDuration) {
-      Alert.alert("提示", "请填写完整信息");
+      Alert.alert('提示', '请填写完整信息');
       return;
     }
     const finalImage = base64Image || childImage || 'https://bkimg.cdn.bcebos.com/pic/9d82d158ccbf6c81800a010dc568a63533fa838bea82?x-bce-process=image/format,f_auto/watermark,image_d2F0ZXIvYmFpa2UyNzI,g_7,xp_5,yp_5,P_20/resize,m_lfit,limit_1,h_1080';
     if (!finalImage) {
-      Alert.alert("提示", "请先上传头像");
+      Alert.alert('提示', '请先上传头像');
       return;
     }
 
@@ -111,22 +94,22 @@ const CreateChildren = () => {
       '对话': dialogue,
       selectedInitials,
       childImage: finalImage, // ✅ 这里不会丢失已存的 childImage
-      imageStyle
+      imageStyle,
     };
 
     try {
       setCurrentChildren(formData);
       // ✅ 调用 API，提交儿童信息
-      const result = await changeChildrenInfo(formData);
+      await changeChildrenInfo(formData);
 
       // ✅ 存储到 Zustand，更新本地状态
 
 
       // ✅ 提示成功并跳转
-      Alert.alert("成功", "儿童信息已提交！");
-      navigation.replace("ChildProfileScreen");
+      Alert.alert('成功', '儿童信息已提交！');
+      navigation.replace('ChildProfileScreen');
     } catch (error) {
-      Alert.alert("错误", error);
+      Alert.alert('错误', error);
     }
   };
 
@@ -366,8 +349,6 @@ const CreateChildren = () => {
 export default CreateChildren;
 
 // ========== 样式表 ==========
-
-const screenWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,

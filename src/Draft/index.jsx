@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, Alert, ScrollView, Image } from 'react-native';
-import useStore from "../store/store.jsx";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { createLearning } from "../services/api";
-import Pronun from "./Pronun";
-import Naming from "./Naming";
-import Ls from "./Ls.jsx";
-import Dia from "./Dia";
+import useStore from '../store/store.jsx';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { createLearning } from '../services/api';
+import Pronun from './Pronun';
+import Naming from './Naming';
+import Ls from './Ls.jsx';
+import Dia from './Dia';
 import LearningTitle from './LearningTitle';
 import ButtonGroup from './ButtonGroup';
 
 const { width, height } = Dimensions.get('window');
+const MODELS = ['构音模块', '命名模块', '语言结构模块', '对话模块'];
 
 const Draft = () => {
     const navigation = useNavigation();
@@ -24,17 +25,15 @@ const Draft = () => {
 
 
     // 所有模块
-    const Models = ['构音模块', '命名模块', '语言结构模块', '对话模块'];
-
     // 确保 learningGoals 存在
     const safeLearningGoals = learningGoals || {};
 
     // 计算可用模块索引
-        const availableModulesIndex = Models.map((_, index) => {
-                if (index === 0 && safeLearningGoals?.构音?.cards?.length > 0) return index;
-                if (index === 1 && safeLearningGoals?.命名?.detail?.length > 0) return index;
-               if (index === 2 && safeLearningGoals?.语言结构?.detail?.length > 0) return index;
-                if (index === 3 && safeLearningGoals?.对话?.detail?.length > 0) return index;
+        const availableModulesIndex = MODELS.map((_, index) => {
+                if (index === 0 && safeLearningGoals?.构音?.cards?.length > 0) {return index;}
+                if (index === 1 && safeLearningGoals?.命名?.detail?.length > 0) {return index;}
+               if (index === 2 && safeLearningGoals?.语言结构?.detail?.length > 0) {return index;}
+                if (index === 3 && safeLearningGoals?.对话?.detail?.length > 0) {return index;}
                 return null;
             }).filter(idx => idx !== null);
 
@@ -45,49 +44,49 @@ const Draft = () => {
     const allowedLastStep = safeAvailableModulesIndex[safeAvailableModulesIndex.length - 1];
 
     // 获取可用模块的名称数组
-    const availableModules = Models.filter((_, index) => safeAvailableModulesIndex.includes(index));
+    const availableModules = MODELS.filter((_, index) => safeAvailableModulesIndex.includes(index));
 
     // 当前模块
     const [currentStep, setCurrentStep] = useState(safeAvailableModulesIndex[0]);
-    const [selectedTheme, setSelectedTheme] = useState(Models[currentStep]);
+    const [selectedTheme, setSelectedTheme] = useState(MODELS[currentStep]);
 
     useEffect(() => {
-        setSelectedTheme(Models[currentStep]);
+        setSelectedTheme(MODELS[currentStep]);
     }, [currentStep]);
 
     // 提交学习计划
     const handleSubmitLearning = async () => {
         try {
             const response = await createLearning(safeLearningGoals, name);
-            Alert.alert("✅ 提交成功", "学习记录已保存！");
+            Alert.alert('✅ 提交成功', '学习记录已保存！');
 
             // 切换到查看模式
-            setViewMode("final");
+            setViewMode('final');
             // **重置到第一个可用模块**
             setCurrentStep(safeAvailableModulesIndex[0]);
 
         } catch (error) {
-            Alert.alert("❌ 提交失败", error.toString());
+            Alert.alert('❌ 提交失败', error.toString());
         }
     };
 
     // 下一步逻辑
     const handleNextStep = () => {
         // 如果在查看模式
-        if (viewMode === "final") {
+        if (viewMode === 'final') {
             // 如果已经是最后一个模块了 => 是否回到主菜单
             if (currentStep === allowedLastStep) {
                 Alert.alert(
-                    "提示",
-                    "是否回到主菜单？",
+                    '提示',
+                    '是否回到主菜单？',
                     [
                         { text: '取消', style: 'cancel' },
                         {
                             text: '确定',
                             onPress: () => {
-                                navigation.navigate("ChildrenList");
-                            }
-                        }
+                                navigation.navigate('ChildrenList');
+                            },
+                        },
                     ],
                     { cancelable: false }
                 );
@@ -127,11 +126,11 @@ const Draft = () => {
 
     const handleLast = () => {
         // 如果处于查看(final)模式
-        if (viewMode === "final") {
+        if (viewMode === 'final') {
             // 如果当前正好是第一个有效模块，就回到主菜单
             const firstStep = safeAvailableModulesIndex[0];
             if (currentStep === firstStep) {
-                return navigation.navigate("ChildrenList");
+                return navigation.navigate('ChildrenList');
             }
             // 否则，继续回到上一个有效模块
             const list = safeAvailableModulesIndex;
@@ -157,7 +156,7 @@ const Draft = () => {
     return (
         <View style={[styles.container, { width, height }]}>
             {/* 如果是查看模式，标题改“教案内容”，否则“教材草稿” */}
-            <Text style={styles.title}>{viewMode === "final" ? "教案内容" : "教材草稿"}</Text>
+            <Text style={styles.title}>{viewMode === 'final' ? '教案内容' : '教材草稿'}</Text>
             <Text style={styles.childFile}>儿童档案</Text>
             <Text style={styles.logo}>LingoLift</Text>
             <View style={styles.ellipse} />
@@ -168,8 +167,8 @@ const Draft = () => {
                 <LearningTitle
                     selectedTheme={selectedTheme}
                     // 在查看模式下禁用 change
-                    onSelect={viewMode === "final" ? () => {} : setSelectedTheme}
-                    onChangeStep={viewMode === "final" ? () => {} : setCurrentStep}
+                    onSelect={viewMode === 'final' ? () => {} : setSelectedTheme}
+                    onChangeStep={viewMode === 'final' ? () => {} : setCurrentStep}
                     availableModules={availableModules}
                 />
             )}
@@ -180,7 +179,7 @@ const Draft = () => {
                                 handleGy={(gy) => {
                                   setLearningGoals({
                                     ...learningGoals,
-                                    构音: gy
+                                    构音: gy,
                                   });
                                 }}
                               />
@@ -204,7 +203,7 @@ const Draft = () => {
                                 style={styles.cardImage}
                                 resizeMode="cover"
                             />
-                            <Text style={styles.cardIndex}>{( index === 0 ? `背景图片` :index + 1)}.</Text>
+                            <Text style={styles.cardIndex}>{( index === 0 ? '背景图片' : index + 1)}.</Text>
                         </View>
                     ))}
                 </ScrollView>
@@ -263,4 +262,3 @@ const styles = StyleSheet.create({
     cardImage:{ width:'100%', height:'100%', borderRadius:5 },
     cardIndex:{ position:'absolute', top:2, left:2, backgroundColor:'rgba(255,255,255,0.6)', paddingHorizontal:4, borderRadius:3, fontSize:20, fontWeight:'bold', color:'#000' },
 });
-
