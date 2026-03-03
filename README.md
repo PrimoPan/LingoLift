@@ -1,77 +1,47 @@
 # LingoLift
 
-LingoLift 是一个面向孤独症儿童个别化教学的 React Native 应用。项目核心能力围绕三件事：
+![LingoLift Opening](./assets/BG/Opening/Opening.png)
 
-- 基于儿童档案生成个别化教学目标
-- 基于教学目标调用 LLM 生成教案草稿
-- 基于场景/词语生成教学图片素材
+## English
 
-## 核心功能
+LingoLift is an AI-assisted personalized education system for children with autism, developed by [HKUST(GZ) ARK Lab](https://arkxlab.github.io/).
 
-- 教师登录与儿童档案管理
-- 教学主题、场景、模块目标的分步配置
-- 构音 / 命名 / 语言结构 / 对话 4 类模块化教案生成
-- 教学历史记录回看
-- 强化物图片自动生成与缓存
+### Highlights
 
-## 技术栈
+- Personalized lesson planning from child profiles
+- LLM-based teaching draft generation
+- Scene and material image generation for instruction
+- End-to-end flow: profile -> goals -> draft -> classroom execution
+
+### Recognition & Support
+
+- Sponsored by **Tencent Light Program**
+- Selected as a **CCF 2025 Annual Public Welfare Project Case**
+- Paper accepted by **CHI'26**: [https://doi.org/10.1145/3772318.3790284](https://doi.org/10.1145/3772318.3790284)
+
+### Tech Stack
 
 - React Native 0.76
-- Expo SDK 52（依赖中包含）
-- Zustand（状态管理）
-- Axios（接口请求）
-- Jest + ESLint（基础工程质量保障）
+- Expo SDK 52
+- Zustand
+- Axios
+- ESLint / Jest / TypeScript
 
-## 目录结构
-
-```text
-.
-├─ App.tsx                     # 应用入口路由
-├─ src/
-│  ├─ services/api.js          # 业务后端 API（登录、儿童信息、学习记录）
-│  ├─ utils/api.js             # GPT/生图接口封装
-│  ├─ store/store.jsx          # Zustand 全局状态
-│  ├─ Procedure/               # 教学流程编排页
-│  ├─ Draft/                   # 教案草稿页
-│  └─ ...
-├─ components/                 # 复用组件
-├─ assets/                     # 静态资源
-└─ package.json
-```
-
-## 环境要求
-
-- Node.js >= 18
-- Yarn 1.x（项目当前使用 `yarn.lock`）
-
-可选（真机/模拟器调试）：
-
-- Android Studio（Android）
-- Xcode（iOS）
-
-## 本地启动
-
-1. 安装依赖
+### Quick Start
 
 ```bash
 yarn install
-```
-
-2. 启动 Metro
-
-```bash
 yarn start
 ```
 
-3. 启动 App
+If `android/` and `ios/` folders are available:
 
 ```bash
-# 若仓库中存在 android/ios 原生目录
 yarn android
 yarn ios
 ```
 
-如果当前分支没有 `android/`、`ios/` 目录，建议直接使用 Expo 方式启动：
+If native folders are not present, use Expo directly:
 
 ```bash
 npx expo start --android
@@ -79,42 +49,52 @@ npx expo start --ios
 npx expo start --web
 ```
 
-## API 配置
+---
 
-当前仓库有两处后端入口配置：
+## 中文
 
-- `src/services/api.js` 中的 `BASE_URL`
-- `src/utils/api.js` 中的 `BASE_URL`
+LingoLift 是一套面向孤独症儿童的 AI 个别化教育系统，由 [香港科技大学（广州）ARK Lab](https://arkxlab.github.io/) 开发。
 
-请在开发/部署前替换成你自己的服务地址。登录成功后，JWT Token 会存入 Zustand（`store.token`），后续请求自动带上 `Authorization`。
+### 项目亮点
 
-## 常用命令
+- 基于儿童档案生成个别化教学目标
+- 基于大语言模型自动生成教案草稿
+- 结合教学场景生成课堂图片素材
+- 覆盖“档案 -> 目标 -> 草稿 -> 教学执行”的完整流程
+
+### 资助与成果
+
+- 项目获得 **腾讯 Light 计划** 资助
+- 项目入选 **CCF 2025 年度公益项目案例**
+- 项目论文被 **CHI'26** 收录：
+  [https://doi.org/10.1145/3772318.3790284](https://doi.org/10.1145/3772318.3790284)
+
+### 技术栈
+
+- React Native 0.76
+- Expo SDK 52
+- Zustand 状态管理
+- Axios 网络请求
+- ESLint / Jest / TypeScript 工程质量体系
+
+### 快速启动
 
 ```bash
-yarn lint                           # 代码检查
-yarn eslint . --fix                # 自动修复可修复问题
-yarn test --watchAll=false --passWithNoTests
-yarn tsc --noEmit                  # TypeScript 配置与类型检查
+yarn install
+yarn start
 ```
 
-## 当前代码质量状态
+若仓库中存在 `android/` 与 `ios/` 原生目录：
 
-- `yarn lint` 无 error（可通过）
-- 仍有少量 warning（主要是未使用变量和内联样式），不会阻塞构建
+```bash
+yarn android
+yarn ios
+```
 
-## 教学流程概览
+若当前分支没有原生目录，可直接使用 Expo：
 
-1. 登录教师账号
-2. 创建/编辑儿童档案
-3. 选择教学主题与场景
-4. 配置教学模块目标（构音/命名/语言结构/对话）
-5. 生成并编辑教案草稿
-6. 提交并在历史记录中回看
-
-## 备注
-
-本仓库面向内部教学研发使用，若需对外发布，请先补齐：
-
-- 环境变量管理（避免硬编码地址）
-- 隐私与合规说明
-- 自动化测试与 CI
+```bash
+npx expo start --android
+npx expo start --ios
+npx expo start --web
+```
