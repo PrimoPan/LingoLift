@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import useStore from '../store/store';
 import { gptQuery, generateImage } from '../utils/api';
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     const pinyinGroupsByStage = [
@@ -105,7 +107,9 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     // ====================================
     const fetchTeachingGoal = async () => {
         try {
-            const prompt = `我只需要生成一个不需要儿童信息的声母教学目标：请严格按照本条prompt的内容生成，忘记之前的对话：这个回答不需要提供任何儿童信息，只有一个辅音作为你的参考信息：我现在只需要你给出一个一句话的辅音教学大纲：【给出的答案不需要有任何多余内容】(给出的答案不需要出现<>等标题,假设你是一个中文自闭症语言教学专家，现在根据我给出的这个辅音，请你给我生成一个本次教学的教学目标，注意是教学目标，不是具体单词。请使用辅音：${selectedPinyin}，给你提供的案例：巩固孩子在舌根音/g/的发音部位和发音方法`;
+            const prompt = buildCipherPrompt(PROMPT_IDS.PRONUN_GOAL, {
+                selectedPinyin,
+            });
             const result = await gptQuery(prompt);
             setTeachingGoal(result);
             setGoalGenerated(true);
@@ -119,7 +123,11 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     // ====================================
     const fetchTeachingWords = async () => {
         try {
-            const prompt = `请返回一个字符串：请一定使用汉语拼音声母为${selectedPinyin}辅音的拼音。我们的教学场景是${Goals?.主题场景?.major},${Goals?.主题场景?.activity}。所以你接下来生成的词语一定要和之前这些场景有关。具体场景是每次生成的答案不允许与上次一样。直接给我一个以[]包裹的对象，字符串形式，不需要json格式，里面只包含4个词语（注意是词语，要与孩子的日常生活相关），给出如下几个辅音：${selectedPinyin},现在根据我给出的这几个辅音，生成4个适用于场景教学的中文单词，并给出拼音,每个元素的格式是汉字（拼音），注意括号内是拼音，括号外是汉字，以英文逗号分割`;
+            const prompt = buildCipherPrompt(PROMPT_IDS.PRONUN_WORDS4, {
+                selectedPinyin,
+                major: Goals?.主题场景?.major,
+                activity: Goals?.主题场景?.activity,
+            });
             const result = await gptQuery(prompt);
 
             let formattedResult = result
@@ -156,7 +164,11 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
     // ====================================
     const regenerateSingleWord = async (index) => {
         try {
-            const prompt = `请返回一个字符串：请一定使用汉语拼音声母为${selectedPinyin}辅音的拼音。我们的教学场景是${Goals?.主题场景?.major},${Goals?.主题场景?.activity}。所以你接下来生成的词语一定要和之前这些场景有关。具体场景是每次生成的答案不允许与上次一样。直接给我一个以[]包裹的对象，字符串形式，不需要json格式，里面只包含1个词语（注意是词语，要与孩子的日常生活相关），给出如下几个辅音：${selectedPinyin},现在根据我给出的这几个辅音，生成1个适用于场景教学的中文单词，并给出拼音,每个元素的格式是汉字（拼音），注意括号内是拼音，括号外是汉字，以英文逗号分割`;
+            const prompt = buildCipherPrompt(PROMPT_IDS.PRONUN_WORD1, {
+                selectedPinyin,
+                major: Goals?.主题场景?.major,
+                activity: Goals?.主题场景?.activity,
+            });
             const result = await gptQuery(prompt);
 
             // 先去掉中括号
@@ -252,7 +264,9 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
         }
         try {
             // 调用 GPT 获取拼音
-            let prompt = `请直接返回 ${currentWord} 的拼音，用英文括号包裹,不要包含其他多余内容或字符。如果带中括号请去除`;
+            let prompt = buildCipherPrompt(PROMPT_IDS.PRONUN_PINYIN, {
+                currentWord,
+            });
             let result = await gptQuery(prompt);
 
             // 去掉 [ ]
@@ -309,7 +323,9 @@ const PronunciationModule = ({ selectedModule, navigation, handleGy }) => {
         });
 
         try {
-            const prompt = `生成内容：${word}”，；细节处理：边缘平滑圆润，不能有尖锐棱角。`;
+            const prompt = buildCipherPrompt(PROMPT_IDS.PRONUN_WORD_IMAGE, {
+                word,
+            });
             const imageUrl = await generateImage(prompt);
 
 

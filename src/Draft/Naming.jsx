@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import useStore from '../store/store.jsx';
 import { gptQuery } from '../utils/api';
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 const Naming = ({viewMode}) => {
     const { name } = useStore(state => state.currentChildren);
@@ -46,7 +48,12 @@ const Naming = ({viewMode}) => {
             .replace(/[\"\'\\]/g, '') // 去掉 ", ', 反斜线
             .trim();                 // 去首尾空格
         //之前的bug, description格式没有统一
-        const prompt = `这是阶段的教学内容生成模块：请你给出完整的教学计划，保证是一段可以直接包裹在包裹在我写的Text组件内的React Native的字符串，使用反斜杠n来换行。不要在返回内容里出现Text、jsx等无关内容（因为返回内容是一段字符串，会被直接包裹在text中）。大概300汉字字左右，用词尽量专业。你是一个中国孤独症教育专家，现在要对孤独症儿童VB-mapp中的命名教学模块教学。你的教学目标是：${safeDescriptions}。你的教学场景是：${learningGoals?.主题场景?.major} - ${learningGoals?.主题场景?.activity}，你可以用到的教学的词语有：${cardsContent}，请你生成一个具体的教学步骤，尽可能将这些词语和场景进行串联，同时符合命名学的教学目标，给出大概300字的教学计划，直接给出内容，不需要其他任何多余回答！`;
+        const prompt = buildCipherPrompt(PROMPT_IDS.DRAFT_NAMING_PLAN, {
+            safeDescriptions,
+            major: learningGoals?.主题场景?.major,
+            activity: learningGoals?.主题场景?.activity,
+            cardsContent,
+        });
         setLoading(true);
         try {
             const result = await gptQuery(prompt);

@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import useStore from '../store/store.jsx';
 import { gptQuery } from '../utils/api';
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 const Pronun = ({viewMode}) => {
     // 从 store 中获取数据和更新方法
@@ -38,7 +40,12 @@ const Pronun = ({viewMode}) => {
 
     // 点击按钮请求 GPT，获取教学计划
     const fetchTeachingPlan = async () => {
-        const prompt = `这是构音阶段的教学内容生成模块：请你给出完整的教学计划，保证是一段可以直接包裹在包裹在我写的Text组件内的React Native的字符串，使用反斜杠n来换行。不要在返回内容里出现Text、jsx等无关内容（因为返回内容是一段字符串，会被直接包裹在text中）。大概300汉字字左右，用词尽量专业。你是一个中国孤独症教育专家，现在要对孤独症儿童进行某一个拼音辅音的教学。你的教学场景是：${learningGoals?.主题场景?.major} - ${learningGoals?.主题场景?.activity}，你教学的目标是：${learningGoals?.构音?.teachingGoal}，你需要教学的词语有：${cardsContent}，请你生成一个具体的教学步骤，能将这些词语和场景进行串联，给出大概150字的教学计划，直接给出内容，不需要其他任何多余回答！`;
+        const prompt = buildCipherPrompt(PROMPT_IDS.DRAFT_PRONUN_PLAN, {
+            major: learningGoals?.主题场景?.major,
+            activity: learningGoals?.主题场景?.activity,
+            teachingGoal: learningGoals?.构音?.teachingGoal,
+            cardsContent,
+        });
 
         setLoading(true);
         try {

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package lingolift.v1;
+
+message GatewayInvokeRequest {
+  string operation = 1;
+  string payload_json = 2;
+}
+
+message GatewayInvokeResponse {
+  bool success = 1;
+  string message = 2;
+  string payload_json = 3;
+}
+
+service GatewayService {
+  rpc Invoke(GatewayInvokeRequest) returns (GatewayInvokeResponse);
+}

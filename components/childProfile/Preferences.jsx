@@ -5,6 +5,8 @@ import { generateImage } from '../../src/utils/api';
 import { cacheImage } from '../../src/utils/imageCache';
 import RNFetchBlob from 'rn-fetch-blob';
 import { changeChildrenInfo } from '../../src/services/api';
+import { buildCipherPrompt } from '../../src/prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../../src/prompts/ids';
 
 const Preferences = () => {
   const { currentChildren } = useStore();
@@ -28,23 +30,14 @@ const Preferences = () => {
         }, {}),
       }));
 
-      const generatePrompt = (itemValue, style) => {
-        return `[教学专用]${style === 'realistic' ? '写实' : '卡通'}，图片主体为${itemValue}，
-        用于自闭症儿童认知训练，要求：
-        1. 空白纯色背景
-        2. 无人物出现（必要情况需中国面孔）
-        3. 线条简洁明确
-        4. 色彩对比度高
-        5. 避免复杂纹理
-        6. 主体占画面70%以上
-        7. 无文字/装饰元素`;
-      };
-
       // =========== 这里改成顺序处理 ============
       const updated = [];
       for (const item of needGenerate) {
         try {
-          const prompt = generatePrompt(item.value, imageStyle);
+          const prompt = buildCipherPrompt(PROMPT_IDS.PREF_REINFORCEMENT_IMAGE, {
+            itemValue: item.value,
+            style: imageStyle === 'realistic' ? 'realistic' : 'cartoon',
+          });
           const remoteUrl = await generateImage(prompt);
 
           if (remoteUrl === '0') {

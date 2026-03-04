@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import useStore from '../store/store.jsx'; // 导入 zustand store
 import { gptQuery, generateImage } from '../utils/api'; // 导入 GPT 和生图 API
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 const DisplayStoreData = () => {
     const currentChildren = useStore((state) => state.currentChildren); // 获取 store 中的 currentChildren
@@ -42,7 +44,10 @@ const DisplayStoreData = () => {
     const generateData = useCallback(async () => {
         setLoading(true);
         try {
-            const prompt = `请你给我的数据直接以{}包裹，不需要其他任何文字内容.每一次生成的内容与教学步骤不允许与上次一样.每一个步骤都必须详细，且包含三个递进步骤.每一个步骤不得少于50字. 注意一切生成内容要以选中场景与“环境”的描述为优先.1. 如果教学目标里有构音，请生成5个汉语词汇，包含用构音中的几个汉语拼音声母构成的词语，如果 Current Children中有强化物，请结合这些强化物做生成； 2. 根据选中场景中的描述，根据LearningGoals中的‘命名’、‘构音’、‘语言结构’（如果有就生成，如果没有就不生成），返回满足每个对应目标的，和场景结合的教学步骤（注意被教学儿童患有自闭症），每个目标返回A,B,C依次3个步骤。当前数据Current Children: ${JSON.stringify(currentChildren).replace(/"/g, "'")}, Learning Goals: ${JSON.stringify(learningGoals).replace(/"/g, "'")}`;
+            const prompt = buildCipherPrompt(PROMPT_IDS.DISPLAYSTORE_TEACHING_DATA, {
+                currentChildren,
+                learningGoals,
+            });
             const gptResponse = await gptQuery(prompt); // 调用 GPT API
             let results;
             try {
@@ -64,15 +69,16 @@ const DisplayStoreData = () => {
     const generateImages = async () => {
         setImageLoading(true);
         try {
-            // 生图 Prompt 示例，可根据实际需求进行细化或修改
-            const scenePrompt = `生成一个简单的卡通风格场景图。绝对不允许出现文字！,场景尽量不要出现人物，如果有，不能超过2人，且全部为中国人，场景尽量较空，绝对不允许出现文字，基于教学目标：${JSON.stringify(
-                learningGoals
-            )}，仅展示环境。`;
+            const scenePrompt = buildCipherPrompt(PROMPT_IDS.DISPLAYSTORE_SCENE_IMAGE, {
+                learningGoals,
+            });
 
-            // 假设 GPT 返回的 5 个构音词汇是存放在 generatedData.words 中
             const elementPrompts =
                 generatedData?.words?.map(
-                    (word) => `接下来你生成的所有元素图都要保证，尽量简单，避免重复元素，避免复杂；生成一个卡通风格小元素图，基于：${word}。`
+                    (word) =>
+                        buildCipherPrompt(PROMPT_IDS.DISPLAYSTORE_ELEMENT_IMAGE, {
+                            word,
+                        })
                 ) || [];
 
             const sceneResponse = await generateImage(scenePrompt); // 调用生图 API 生成场景图

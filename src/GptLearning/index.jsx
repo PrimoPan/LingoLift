@@ -12,6 +12,8 @@ import {
 import { useNavigation } from '@react-navigation/native'; // 导入导航功能
 import { gptQuery, generateImage } from '../utils/api'; // 导入 GPT 和图片生成 API
 import useStore from '../store/store.jsx'; // 导入 zustand store
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 const GptLearning = () => {
     const navigation = useNavigation(); // 获取导航对象
@@ -26,14 +28,20 @@ const GptLearning = () => {
         const fetchLearningContent = async () => {
             setLoading(true);
             try {
-                const prompt = `基于以下环境要求生成三个场景：${learningGoals?.环境 || '默认环境'}`;
+                const prompt = buildCipherPrompt(PROMPT_IDS.GPT_LEARNING_SCENES, {
+                    environment: learningGoals?.环境 || 'default',
+                });
                 const gptResponse = await gptQuery(prompt); // 调用 GPT API
                 const scenes = JSON.parse(gptResponse)?.response || [];
                 console.log('GPT Scenes:', scenes);
 
                 // 为每个场景生成卡通风格图片
                 const imagePromises = scenes.map((scene) =>
-                    generateImage(`绝对不允许出现文字。卡通风格。重要：场景尽量人物较少，不允许超过2个人，且全部为中国人，场景尽量较空，绝对不允许出现文字。以下是场景描述${scene.描述}`).then((url) => ({ ...scene, imageUrl: url }))
+                    generateImage(
+                        buildCipherPrompt(PROMPT_IDS.GPT_LEARNING_SCENE_IMAGE, {
+                            description: scene.描述,
+                        })
+                    ).then((url) => ({ ...scene, imageUrl: url }))
                 );
                 const generatedScenes = await Promise.all(imagePromises);
                 setScenesData(generatedScenes);
@@ -57,7 +65,11 @@ const GptLearning = () => {
             return newLoading;
         });
         try {
-            const newImageUrl = await generateImage(`${description}，卡通风格`);
+            const newImageUrl = await generateImage(
+                buildCipherPrompt(PROMPT_IDS.GPT_LEARNING_REGEN_IMAGE, {
+                    description,
+                })
+            );
             setScenesData((prev) =>
                 prev.map((scene, i) => (i === index ? { ...scene, imageUrl: newImageUrl } : scene))
             );

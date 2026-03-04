@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Button, StyleSheet, Text, ScrollView, Image, Alert } from 'react-native';
 import { gptQuery, generateImage } from '../../utils/api'; // 引入封装的接口
+import { buildCipherPrompt } from '../../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../../prompts/ids';
 
 const GptTest = () => {
     const [imagesData, setImagesData] = useState([]); // 图片和描述的数据数组
@@ -9,7 +11,7 @@ const GptTest = () => {
         setLoading(true);
         try {
             // 调用 GPT 接口生成描述
-            const prompt = '生成三个描述，每个描述用于图片生成。';
+            const prompt = buildCipherPrompt(PROMPT_IDS.GPT_TEST_DESCRIPTIONS, {});
             const response = await gptQuery(prompt);
             const descriptions = JSON.parse(response)?.response || [];
 

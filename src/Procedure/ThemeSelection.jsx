@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import useStore from '../store/store';
 import { gptQuery } from '../utils/api';
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 /* ─── 静态环境库 ─────────────────────────────────── */
 const environmentData = require('../Knowledge/Environment.json');
@@ -33,7 +35,9 @@ const ThemeSelection = ({ selectedBox, handleSelectBox, handleSelectMajor }) => 
     const generateInterestThemes = useCallback(async (reinArr) => {
         setLoadingGen(true);
         Alert.alert('提示', '正在根据儿童强化物生成场景，请稍后');
-        const prompt = `你是一位儿童教育专家，请根据以下强化物生成对应的儿童教学场景名称，每个场景名称用中文括号注明强化物，直接返回包含三个场景名称的数组字符串，不要任何解释和额外内容。例如：['超市购物（苹果）', '汽车大赛（小汽车）', '户外游戏（丢手绢）']。强化物列表：${reinArr.join(', ')}`;
+        const prompt = buildCipherPrompt(PROMPT_IDS.THEME_SELECTION_INTEREST, {
+            reinforcements: reinArr,
+        });
 
         try {
             const resp = await gptQuery(prompt);

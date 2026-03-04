@@ -51,7 +51,7 @@ const LearningMode = () => {
     );
 
     const [selectedInitials, setSelectedInitials] = useState(
-        Array.isArray(savedLearningGoals?.构音)
+        savedLearningGoals?.构音 && typeof savedLearningGoals.构音 === 'string'
             ? savedLearningGoals.构音.split(', ')
             : Array.isArray(initialStoreValue.selectedInitials)
                 ? initialStoreValue.selectedInitials

@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import { generateImage, gptQuery } from '../utils/api';
 import useStore from '../store/store';
+import { buildCipherPrompt } from '../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../prompts/ids';
 
 const environmentData = require('../Knowledge/Environment.json');
 
@@ -50,7 +52,9 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
             let scenes = environmentData[selectedMajor] || [];
 
             if (scenes.length === 0) {
-                const prompt = `作为自闭症教学专家，请生成三个与${selectedMajor}相关的教学场景，返回格式如['场景1','场景2','场景3']：`;
+                const prompt = buildCipherPrompt(PROMPT_IDS.THEME_SCENE_FALLBACK, {
+                    selectedMajor,
+                });
                 const resp = await gptQuery(prompt);
                 scenes = parseScenes(resp);
             }
@@ -90,7 +94,10 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
         setImageUrl(null);
 
         try {
-            const desc = `自闭症教学背景图，主题：${selectedMajor}，场景：${scene}，简洁风格，留白区域`;
+            const desc = buildCipherPrompt(PROMPT_IDS.GPT_LEARNING_SCENE_IMAGE, {
+                selectedMajor,
+                description: scene,
+            });
             const img = await generateImage(desc);
 
             setImageUrl(img);
@@ -114,7 +121,10 @@ const ThemeScene = ({ selectedMajor, onSelectScene }) => {
         setImageUrl(null);
 
         try {
-            const img = await generateImage(customDescription);
+            const customCipher = buildCipherPrompt(PROMPT_IDS.GPT_LEARNING_REGEN_IMAGE, {
+                description: customDescription,
+            });
+            const img = await generateImage(customCipher);
             setImageUrl(img);
             onSelectScene(customDescription, img);
             setSceneCache(selectedMajor, {
