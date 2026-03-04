@@ -10,6 +10,7 @@
     "gen:proto": "mkdir -p src/gen && protoc --plugin=./node_modules/.bin/protoc-gen-es --es_out=src/gen --es_opt=target=ts proto/lingolift/v1/gateway.proto",
     "encrypt:prompts": "node scripts/encrypt-prompts.mjs",
     "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "start": "react-native start",
     "test": "jest"
   },

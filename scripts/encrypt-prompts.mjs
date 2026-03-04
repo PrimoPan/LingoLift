@@ -13,7 +13,7 @@ const parseArg = (name, fallback = '') => {
 };
 
 const inputPath = parseArg('--input', '');
-const outputPath = parseArg('--output', path.resolve('src/prompts/promptCatalog.enc.js'));
+const outputPath = parseArg('--output', path.resolve('src/prompts/promptCatalog.enc.ts'));
 const keyB64 =
   parseArg('--key', '') ||
   process.env.PROMPT_AES_KEY_B64 ||
