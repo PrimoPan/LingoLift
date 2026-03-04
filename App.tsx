@@ -22,6 +22,7 @@ import LearningThemeScreen from './components/LearningTheme/LearningThemeScreen'
 import Procedure from './src/Procedure';
 import Draft from './src/Draft/index';
 import ChildrenList from './src/ChildrenList';
+import GlobalBrandMark from './src/components/GlobalBrandMark';
 const Stack = createNativeStackNavigator();
 import ChildHistory from './src/ChildHistory';
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
 
     return (
         <NavigationContainer>
+            <GlobalBrandMark />
             <Stack.Navigator initialRouteName={username ? 'Login' : 'Opening'} screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Opening" component={Opening} />
                 <Stack.Screen name="Login" component={Login} />
