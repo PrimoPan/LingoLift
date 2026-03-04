@@ -1,20 +1,26 @@
-// @ts-nocheck
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import useStore from '../../src/store/store';
+import useStore from '../../store/store';
 import { useNavigation } from '@react-navigation/native';
+import type { ChildProfileData } from './types';
 
 const PersonalInfo = () => {
-  const { name, gender, age, courseDuration, childImage } = useStore(state => state.currentChildren);
-  const navigation = useNavigation();
+  const child = useStore((state) => state.currentChildren as ChildProfileData);
+  const { name, gender, age, courseDuration, childImage } = child;
+  const navigation = useNavigation<any>();
 
   const handleEdit = () => {
     navigation.navigate('CreateChildren');
   };
+
   const handleViewHistory = () => {
-    navigation.navigate('ChildHistory', { childName: name });
+    navigation.navigate('ChildHistory', { childName: typeof name === 'string' ? name : '' });
   };
 
+  const displayName = typeof name === 'string' && name.trim() ? name : '未命名';
+  const ageLabel = age ?? '--';
+  const courseDurationLabel = courseDuration ?? '--';
+  const genderLabel = gender === 'male' ? '男孩' : gender === 'female' ? '女孩' : '未设置';
 
   return (
       <View style={styles.container}>
@@ -44,13 +50,13 @@ const PersonalInfo = () => {
           />
 
           <View style={styles.details}>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={styles.info}>年龄 : {age} 岁</Text>
-            <Text style={styles.info}>性别 : {gender === 'male' ? '男孩' : '女孩'}</Text>
+            <Text style={styles.name}>{displayName}</Text>
+            <Text style={styles.info}>年龄 : {ageLabel} 岁</Text>
+            <Text style={styles.info}>性别 : {genderLabel}</Text>
           </View>
 
           <View style={styles.courseInfo}>
-            <Text style={styles.info}>课程周期 ：{courseDuration} 个月</Text>
+            <Text style={styles.info}>课程周期 ：{courseDurationLabel} 个月</Text>
             <TouchableOpacity style={styles.viewRecordButton} onPress={handleViewHistory}>
               <Image
                   source={{

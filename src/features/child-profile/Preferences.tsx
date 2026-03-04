@@ -1,38 +1,46 @@
-// @ts-nocheck
-import React, { useCallback, useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
-import useStore from '../../src/store/store';
-import { generateImage } from '../../src/utils/api';
-import { cacheImage } from '../../src/utils/imageCache';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, ActivityIndicator, type ListRenderItem } from 'react-native';
+import useStore from '../../store/store';
+import { generateImage } from '../../utils/api';
+import { cacheImage } from '../../utils/imageCache';
 import RNFetchBlob from 'rn-fetch-blob';
-import { changeChildrenInfo } from '../../src/services/api';
-import { buildCipherPrompt } from '../../src/prompts/buildCipherPrompt';
-import { PROMPT_IDS } from '../../src/prompts/ids';
+import { changeChildrenInfo } from '../../services/api';
+import { buildCipherPrompt } from '../../prompts/buildCipherPrompt';
+import { PROMPT_IDS } from '../../prompts/ids';
+import type { ChildProfileData, ReinforcementItem } from './types';
 
 const Preferences = () => {
-  const { currentChildren } = useStore();
-  const { reinforcements = [], imageStyle } = currentChildren || {};
-  const [loadingMap, setLoadingMap] = useState({});
-  const [localExistsMap, setLocalExistsMap] = useState({});
+  const currentChildren = useStore((state) => state.currentChildren as ChildProfileData);
+  const reinforcements = useMemo<ReinforcementItem[]>(
+    () => (Array.isArray(currentChildren.reinforcements) ? currentChildren.reinforcements : []),
+    [currentChildren.reinforcements]
+  );
+  const imageStyle = currentChildren.imageStyle;
+  const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
+  const [localExistsMap, setLocalExistsMap] = useState<Record<string, boolean>>({});
+
+  const itemKey = (id: string | number) => String(id);
 
   // 处理图片生成
   const handleGenerateImages = useCallback(async () => {
     try {
       // 找出没有 image 字段的条目需要生成图片
-      const needGenerate = reinforcements.filter(item => !item.image);
-      if (needGenerate.length === 0) {return;}
+      const needGenerate = reinforcements.filter((item) => !item.image);
+      if (needGenerate.length === 0) {
+        return;
+      }
 
       // 设置加载状态
-      setLoadingMap(prev => ({
+      setLoadingMap((prev) => ({
         ...prev,
         ...needGenerate.reduce((acc, item) => {
-          acc[item.id] = true;
+          acc[itemKey(item.id)] = true;
           return acc;
-        }, {}),
+        }, {} as Record<string, boolean>),
       }));
 
       // =========== 这里改成顺序处理 ============
-      const updated = [];
+      const updated: ReinforcementItem[] = [];
       for (const item of needGenerate) {
         try {
           const prompt = buildCipherPrompt(PROMPT_IDS.PREF_REINFORCEMENT_IMAGE, {
@@ -47,7 +55,7 @@ const Preferences = () => {
             continue;
           }
 
-          let localUri;
+          let localUri: string;
           try {
             localUri = await cacheImage(remoteUrl);
           } catch (e) {
@@ -70,32 +78,26 @@ const Preferences = () => {
 
       // 合并更新到 reinforcements
       const mergedMap = new Map(updated.map(item => [item.id, item]));
-      const merged = reinforcements.map(originalItem =>
-          mergedMap.get(originalItem.id) || originalItem
-      );
+      const merged = reinforcements.map((originalItem) => mergedMap.get(originalItem.id) || originalItem);
 
       // 更新到 Zustand
       useStore.getState().setCurrentChildren({
         ...currentChildren,
-        reinforcements: merged.filter(Boolean).map(i => ({
-          ...i,
-          image: i.image
-              ? { uri: i.image.uri, remote: i.image.remote }
-              : undefined,
+        reinforcements: merged.filter(Boolean).map((item) => ({
+          ...item,
+          image: item.image ? { uri: item.image.uri, remote: item.image.remote } : undefined,
         })),
       });
 
       // 上传给后端时只带 remote，不带本地uri
-      const childrenForUpload = {
+      const childrenForUpload: Record<string, unknown> = {
         ...currentChildren,
-        reinforcements: merged.map(i => ({
-          ...i,
-          // 这里只传给后端 remote 就可以了，本地 uri 留在客户端用
-          image: i.image ? { remote: i.image.remote } : undefined,
+        reinforcements: merged.map((item) => ({
+          ...item,
+          image: item.image ? { remote: item.image.remote } : undefined,
         })),
       };
       await changeChildrenInfo(childrenForUpload);
-
     } catch (error) {
       console.error('批量生成失败:', error);
     } finally {
@@ -116,7 +118,7 @@ const Preferences = () => {
   // 检查本地文件是否存在
   useEffect(() => {
     const checkLocalFiles = async () => {
-      const newLocalExistsMap = {};
+      const newLocalExistsMap: Record<string, boolean> = {};
       for (const item of reinforcements) {
         // 如果有本地 uri，就检查一下
         const localUri = item.image?.uri;
@@ -124,10 +126,10 @@ const Preferences = () => {
           // 去掉 "file://" 后再给 fs.exists
           const pathWithoutPrefix = localUri.replace('file://', '');
           const exists = await RNFetchBlob.fs.exists(pathWithoutPrefix);
-          newLocalExistsMap[item.id] = exists;
+          newLocalExistsMap[itemKey(item.id)] = exists;
         } else {
           // 如果没有本地文件或者不是 file:// 开头，就标记 false
-          newLocalExistsMap[item.id] = false;
+          newLocalExistsMap[itemKey(item.id)] = false;
         }
       }
       setLocalExistsMap(newLocalExistsMap);
@@ -137,9 +139,12 @@ const Preferences = () => {
   }, [reinforcements]);
 
   // 渲染单个强化物项
-  const renderItem = ({ item }) => {
-    const isLoading = loadingMap[item.id];
-    const localExists = localExistsMap[item.id];
+  const renderItem: ListRenderItem<ReinforcementItem> = ({ item }) => {
+    const key = itemKey(item.id);
+    const isLoading = loadingMap[key];
+    const localExists = localExistsMap[key];
+    const localUri = item.image?.uri ?? '';
+    const remoteUri = item.image?.remote ?? '';
 
     return (
         <View style={styles.preferenceItem}>
@@ -152,7 +157,7 @@ const Preferences = () => {
                 {localExists ? (
                     // 如果本地文件存在，则显示本地图片
                     <Image
-                        source={{ uri: item.image?.uri }}
+                        source={{ uri: localUri }}
                         style={styles.preferenceImage}
                         resizeMode="contain"
                         onError={(error) => {
@@ -162,7 +167,7 @@ const Preferences = () => {
                 ) : (
                     // 否则还是用远端地址
                     <Image
-                        source={{ uri: item.image?.remote }}
+                        source={{ uri: remoteUri }}
                         style={styles.preferenceImage}
                         resizeMode="contain"
                         onError={(error) => {
@@ -194,7 +199,9 @@ const Preferences = () => {
         <FlatList
             data={reinforcements}
             renderItem={renderItem}
-            keyExtractor={item => (item?.id ? item.id.toString() : Math.random().toString())}
+            keyExtractor={(item, index) =>
+              item?.id !== undefined && item?.id !== null ? item.id.toString() : `reinforcement-${index}`
+            }
             numColumns={3}
             columnWrapperStyle={styles.row}
             ListEmptyComponent={<Text style={styles.emptyText}>暂无强化物数据</Text>}

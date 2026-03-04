@@ -17,14 +17,13 @@ import LearningMode from './src/LearningMode/LearningMode';
 import EnvironmentChoose from './src/EnvironmentChoose';
 import GptLearning from './src/GptLearning';
 import useStore from './src/store/store'; // 引入 zustand store
-import ChildProfileScreen from './components/childProfile/ChildProfileScreen';
-import LearningThemeScreen from './components/LearningTheme/LearningThemeScreen';
+import { ChildProfileScreen, LearningThemeScreen } from './src/features';
 import Procedure from './src/Procedure';
 import Draft from './src/Draft/index';
 import ChildrenList from './src/ChildrenList';
 import GlobalBrandMark from './src/components/GlobalBrandMark';
-const Stack = createNativeStackNavigator();
 import ChildHistory from './src/ChildHistory';
+const Stack = createNativeStackNavigator();
 const App = () => {
     const username = useStore((state) => state.username);
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {View, Image, StyleSheet, ScrollView} from 'react-native';
 import Header from './Header';

@@ -1,8 +1,21 @@
-// @ts-nocheck
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import useStore from '../../src/store/store';
-const MilestoneItem = ({ title, englishTitle, progress, backgroundColor }) => (
+import useStore from '../../store/store';
+import type { ChildProfileData } from './types';
+
+type MilestoneProgress = {
+  month: string;
+  bars: boolean[];
+};
+
+type MilestoneItemProps = {
+  title: string;
+  englishTitle: string;
+  progress: MilestoneProgress;
+  backgroundColor: string;
+};
+
+const MilestoneItem = ({ title, englishTitle, progress, backgroundColor }: MilestoneItemProps) => (
     <View style={styles.milestoneItem}>
       {/* Left side title */}
       <View style={[styles.milestoneTitle, { backgroundColor }]}>
@@ -33,10 +46,15 @@ const MilestoneItem = ({ title, englishTitle, progress, backgroundColor }) => (
 );
 
 const LanguageMilestones = () => {
-  const { currentChildren } = useStore();
-  const { selectedInitials, 命名, 对话, 语言结构 } = currentChildren;
+  const currentChildren = useStore((state) => state.currentChildren as ChildProfileData);
+  const selectedInitials = Array.isArray(currentChildren.selectedInitials)
+    ? currentChildren.selectedInitials
+    : [];
+  const namingLevel = Number(currentChildren.命名 ?? 0);
+  const dialogueLevel = Number(currentChildren.对话 ?? 0);
+  const languageLevel = Number(currentChildren.语言结构 ?? 0);
 
-  const milestones = [
+  const milestones: MilestoneItemProps[] = [
     {
       title: '构音',
       englishTitle: 'Articulation',
@@ -52,9 +70,9 @@ const LanguageMilestones = () => {
       title: '命名',
       englishTitle: 'Tact',
       progress: {
-        month: `${命名}-M`,
+        month: `${namingLevel}-M`,
         bars: Array.from({ length: 5 }, (_, i) =>
-            i < Math.min(Math.floor(命名 / 3), 5)
+          i < Math.min(Math.floor(namingLevel / 3), 5)
         ),
       },
       backgroundColor: '#FCC40B',
@@ -63,9 +81,9 @@ const LanguageMilestones = () => {
       title: '语言结构',
       englishTitle: 'Linguistic Structure',
       progress: {
-        month: `${语言结构}-M`,
+        month: `${languageLevel}-M`,
         bars: Array.from({ length: 5 }, (_, i) =>
-            i < Math.min(Math.floor(语言结构 / 3), 5)
+          i < Math.min(Math.floor(languageLevel / 3), 5)
         ),
       },
       backgroundColor: '#FF7A69',
@@ -74,9 +92,9 @@ const LanguageMilestones = () => {
       title: '对话',
       englishTitle: 'Intraverbal',
       progress: {
-        month: `${对话}-M`,
+        month: `${dialogueLevel}-M`,
         bars: Array.from({ length: 5 }, (_, i) =>
-            i < Math.min(Math.floor(对话 / 3), 5)
+          i < Math.min(Math.floor(dialogueLevel / 3), 5)
         ),
       },
       backgroundColor: '#0ED89E',
@@ -173,9 +191,6 @@ const styles = StyleSheet.create({
     height: 11,
     borderRadius: 11,
     marginHorizontal: 3,
-  },
-  filledBar: {
-    // This is now controlled dynamically by backgroundColor from the props
   },
   emptyBar: {
     backgroundColor: '#E0E0E0',

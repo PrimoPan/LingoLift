@@ -1,9 +1,6 @@
-// @ts-nocheck
-import {ChildProfile} from '../../components/childProfile/ChildProfile';
+import React from 'react';
+import { ChildProfileScreen } from '../features';
 
-// @ts-ignore
 export function Debug() {
-    return (
-        <ChildProfile/>
-    );
+  return <ChildProfileScreen />;
 }
