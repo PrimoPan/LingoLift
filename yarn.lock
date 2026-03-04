@@ -1168,47 +1168,45 @@
   resolved "https://registry.npmmirror.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bufbuild/protobuf@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.npmmirror.com/@bufbuild/protobuf/-/protobuf-1.10.0.tgz#1a67ac889c2d464a3492b3e54c38f80517963b16"
-  integrity sha512-QDdVFLoN93Zjg36NoQPZfsVH9tZew7wKDKyV5qRdj8ntT4wQCOradQjRaTdwMhWUYsgKsvCINKKm87FdEk96Ag==
-
-"@bufbuild/protobuf@^1.10.0":
+"@bufbuild/protobuf@1.10.1", "@bufbuild/protobuf@^1.10.0", "@bufbuild/protobuf@^1.10.1":
   version "1.10.1"
   resolved "https://registry.npmmirror.com/@bufbuild/protobuf/-/protobuf-1.10.1.tgz#1d76d15290c0212076c15ede94d15157ba0c6344"
   integrity sha512-wJ8ReQbHxsAfXhrf9ixl0aYbZorRuOWpBNzm8pL8ftmSxQx/wnJD5Eg861NwJU/czy2VXFIebCeZnZrI9rktIQ==
 
-"@bufbuild/protobuf@^2.11.0":
-  version "2.11.0"
-  resolved "https://registry.npmmirror.com/@bufbuild/protobuf/-/protobuf-2.11.0.tgz#3ec3985c9074b23aea337957225fe15a0e845f8e"
-  integrity sha512-sBXGT13cpmPR5BMgHE6UEEfEaShh5Ror6rfN3yEK5si7QVrtZg8LEPQb0VVhiLRUslD2yLnXtnRzG035J/mZXQ==
-
-"@bufbuild/protoc-gen-es@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.npmmirror.com/@bufbuild/protoc-gen-es/-/protoc-gen-es-1.10.0.tgz#8771794259b6b78554458b85f7149df155ebe21b"
-  integrity sha512-zBYBsVT/ul4uZb6F+kD7/k4sWNHVVbEPfJwKi0FDr+9VJo8MKIofI6pkr5ksBLr4fi/74r+e/75Xi/0clL5dXg==
+"@bufbuild/protoc-gen-es@1.10.1":
+  version "1.10.1"
+  resolved "https://registry.npmmirror.com/@bufbuild/protoc-gen-es/-/protoc-gen-es-1.10.1.tgz#f46f8bcb248c7b768a6ffbc0a8c56a23dfabc38d"
+  integrity sha512-YADugbvibIdZSb0NGf5OF87IyKTuMvMFZ7vMHgm6pL1SCfDwJ/ZRianTdrPG9hq/gOipK+NwHmXBViyS3J7nxA==
   dependencies:
-    "@bufbuild/protobuf" "^1.10.0"
-    "@bufbuild/protoplugin" "1.10.0"
+    "@bufbuild/protobuf" "^1.10.1"
+    "@bufbuild/protoplugin" "1.10.1"
 
-"@bufbuild/protoplugin@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.npmmirror.com/@bufbuild/protoplugin/-/protoplugin-1.10.0.tgz#314035fa2b80fa56e72d1aa06eb9ea6de6877c4c"
-  integrity sha512-u6NE4vL0lw1+EK4/PiE/SQB7fKO4LRJNTEScIXVOi2x88K/c8WKc/k0KyEaA0asVBMpwekJQZGnRyj04ZtN5Gg==
+"@bufbuild/protoplugin@1.10.1", "@bufbuild/protoplugin@^1.10.0":
+  version "1.10.1"
+  resolved "https://registry.npmmirror.com/@bufbuild/protoplugin/-/protoplugin-1.10.1.tgz#1d7fdf4aa7aa8a960f4a80e107bb9debb2c6c480"
+  integrity sha512-LaSbfwabAFIvbVnbn8jWwElRoffCIxhVraO8arliVwWupWezHLXgqPHEYLXZY/SsAR+/YsFBQJa8tAGtNPJyaQ==
   dependencies:
-    "@bufbuild/protobuf" "1.10.0"
+    "@bufbuild/protobuf" "1.10.1"
     "@typescript/vfs" "^1.4.0"
     typescript "4.5.2"
 
-"@connectrpc/connect-web@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmmirror.com/@connectrpc/connect-web/-/connect-web-2.1.1.tgz#155eb30cd8cfc91142870277ab300d313f9d8dcf"
-  integrity sha512-J8317Q2MaFRCT1jzVR1o06bZhDIBmU0UAzWx6xOIXzOq8+k71/+k7MUF7AwcBUX+34WIvbm5syRgC5HXQA8fOg==
+"@connectrpc/connect-web@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.npmmirror.com/@connectrpc/connect-web/-/connect-web-1.7.0.tgz#ea5cc4c080c616f57d4f1a4b610c60c991cb5917"
+  integrity sha512-qyP0YOnUPRWwCc/VfsoydMJvkb7EyUPr2q9sHgBuJzbADjiqck1gKH5V5ZPzPhTLBvmz5UvG+wiZ5sMRQHU1MQ==
 
-"@connectrpc/connect@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmmirror.com/@connectrpc/connect/-/connect-2.1.1.tgz#a9623190d218890bec2d68e56037cb124a33e857"
-  integrity sha512-JzhkaTvM73m2K1URT6tv53k2RwngSmCXLZJgK580qNQOXRzZRR/BCMfZw3h+90JpnG6XksP5bYT+cz0rpUzUWQ==
+"@connectrpc/connect@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.npmmirror.com/@connectrpc/connect/-/connect-1.7.0.tgz#03489c61502f70c2c466f97683a2431953915c6a"
+  integrity sha512-iNKdJRi69YP3mq6AePRT8F/HrxWCewrhxnLMNm0vpqXAR8biwzRtO6Hjx80C6UvtKJ5sFmffQT7I4Baecz389w==
+
+"@connectrpc/protoc-gen-connect-es@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.npmmirror.com/@connectrpc/protoc-gen-connect-es/-/protoc-gen-connect-es-1.7.0.tgz#1e4ef6327b97190d0c38a2d307028e3e431457a9"
+  integrity sha512-g2rE799dxGgXtwSTBOJoSlzCy3HN0IX/Es8uKsCgXRmco8o277/bb5nz1X8TmvBooCBGNdtEdUDG50olcvS9jQ==
+  dependencies:
+    "@bufbuild/protobuf" "^1.10.0"
+    "@bufbuild/protoplugin" "^1.10.0"
 
 "@csstools/normalize.css@*":
   version "12.1.1"

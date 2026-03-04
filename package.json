@@ -7,7 +7,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "gen:proto": "mkdir -p src/gen && protoc --plugin=./node_modules/.bin/protoc-gen-es --es_out=src/gen --es_opt=target=ts proto/lingolift/v1/gateway.proto",
+    "gen:proto": "mkdir -p src/gen && protoc --plugin=./node_modules/.bin/protoc-gen-es --plugin=./node_modules/.bin/protoc-gen-connect-es --es_out=src/gen --es_opt=target=ts --connect-es_out=src/gen --connect-es_opt=target=ts proto/lingolift/v1/gateway.proto",
     "encrypt:prompts": "node scripts/encrypt-prompts.mjs",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -15,9 +15,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.11.0",
-    "@connectrpc/connect": "^2.1.1",
-    "@connectrpc/connect-web": "^2.1.1",
+    "@bufbuild/protobuf": "1.10.1",
+    "@connectrpc/connect": "1.7.0",
+    "@connectrpc/connect-web": "1.7.0",
     "@expo/metro-runtime": "~4.0.1",
     "@noble/ciphers": "1.2.1",
     "@react-native-async-storage/async-storage": "^2.1.1",
@@ -56,7 +56,8 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@bufbuild/protoc-gen-es": "1.10.0",
+    "@bufbuild/protoc-gen-es": "1.10.1",
+    "@connectrpc/protoc-gen-connect-es": "1.7.0",
     "@react-native-community/cli": "15.0.1",
     "@react-native-community/cli-platform-android": "15.0.1",
     "@react-native-community/cli-platform-ios": "15.0.1",

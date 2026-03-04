@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Button, StyleSheet, Text, ScrollView, Image, Alert } from 'react-native';
 import { gptQuery, generateImage } from '../../utils/api'; // 引入封装的接口
-import { buildCipherPrompt } from '../../prompts/buildCipherPrompt';
+import { buildAdhocCipherPrompt, buildCipherPrompt } from '../../prompts/buildCipherPrompt';
 import { PROMPT_IDS } from '../../prompts/ids';
 
 const GptTest = () => {
@@ -18,7 +18,12 @@ const GptTest = () => {
 
             // 调用图片生成接口为每个描述生成图片
             const imagePromises = descriptions.map((desc) =>
-                generateImage(desc.描述).then((url) => ({ ...desc, imageUrl: url }))
+                generateImage(
+                    buildAdhocCipherPrompt(
+                        String(desc.描述 || ''),
+                        'GPT_TEST_IMAGE_DESCRIPTION'
+                    )
+                ).then((url) => ({ ...desc, imageUrl: url }))
             );
             const generatedImages = await Promise.all(imagePromises);
 

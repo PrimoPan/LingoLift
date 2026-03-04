@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { TextInput, Button, StyleSheet, Image, Alert, ScrollView } from 'react-native';
 import { generateImage } from '../../utils/api';
+import { buildAdhocCipherPrompt } from '../../prompts/buildCipherPrompt';
 
 const ImageGenerator = () => {
     const [description, setDescription] = useState('');
@@ -16,7 +17,11 @@ const ImageGenerator = () => {
 
         setLoading(true);
         try {
-            const result = await generateImage(description);
+            const cipherPrompt = buildAdhocCipherPrompt(
+                description,
+                'IMAGE_GENERATOR_USER_INPUT'
+            );
+            const result = await generateImage(cipherPrompt);
             setImageUrl(result);
         } catch (error) {
             Alert.alert('错误', error.message || '生成图片失败，请重试！');

@@ -1,4 +1,7 @@
-import { GRPC_BASE_URL, GRPC_GATEWAY_PATH } from '../config/network';
+import { createClient, type CallOptions } from '@connectrpc/connect';
+import { createConnectTransport } from '@connectrpc/connect-web';
+import { GRPC_BASE_URL } from '../config/network';
+import { GatewayService } from '../gen/proto/lingolift/v1/gateway_connect';
 
 export type GatewayInvokeInput = {
   operation: string;
@@ -7,49 +10,37 @@ export type GatewayInvokeInput = {
 };
 
 export type GatewayRawResponse = Record<string, unknown>;
-
-const joinUrl = (base: string, path: string): string => {
-  const normalizedBase = base.replace(/\/+$/, '');
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  return `${normalizedBase}${normalizedPath}`;
-};
+const transport = createConnectTransport({
+  baseUrl: GRPC_BASE_URL,
+  useBinaryFormat: false,
+});
+const gatewayClient = createClient(GatewayService, transport);
 
 export const invokeGateway = async ({
   operation,
   payloadJson,
   token,
 }: GatewayInvokeInput): Promise<GatewayRawResponse> => {
-  const endpoint = joinUrl(GRPC_BASE_URL, GRPC_GATEWAY_PATH);
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'Connect-Protocol-Version': '1',
-  };
+  const headers = new Headers();
 
   if (token) {
-    headers.Authorization = `Bearer ${token}`;
+    headers.set('Authorization', `Bearer ${token}`);
   }
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
+  const callOptions: CallOptions = { headers };
+  const response = await gatewayClient.invoke(
+    {
       operation,
-      payload_json: payloadJson,
-    }),
-  });
+      payloadJson,
+    },
+    callOptions
+  );
 
-  const text = await response.text();
-  if (!response.ok) {
-    throw new Error(`gRPC invoke failed (${response.status}): ${text}`);
-  }
-
-  if (!text) {
-    return {};
-  }
-
-  try {
-    return JSON.parse(text) as GatewayRawResponse;
-  } catch {
-    throw new Error(`gRPC response is not valid JSON: ${text}`);
-  }
+  return {
+    success: response.success,
+    message: response.message,
+    payload_json: response.payloadJson,
+    payloadJson: response.payloadJson,
+    data: response.payloadJson,
+  };
 };

@@ -11,6 +11,15 @@ const readEnv = (...keys: string[]): string => {
   return '';
 };
 
+const assertNoPublicKeyEnv = (...keys: string[]): void => {
+  const leaked = keys.find((key) => Boolean(process?.env?.[key]));
+  if (leaked) {
+    throw new Error(
+      `Refuse to load AES key from public env (${leaked}). Use private env variables instead.`
+    );
+  }
+};
+
 const readKey = (...keys: string[]): string => {
   const value = readEnv(...keys);
   if (value) {
@@ -19,11 +28,15 @@ const readKey = (...keys: string[]): string => {
   throw new Error(`Missing AES key env: ${keys.join(' / ')}`);
 };
 
-export const getPromptAesKey = (): string =>
-  readKey('PROMPT_AES_KEY_B64', 'EXPO_PUBLIC_PROMPT_AES_KEY_B64');
+export const getPromptAesKey = (): string => {
+  assertNoPublicKeyEnv('EXPO_PUBLIC_PROMPT_AES_KEY_B64');
+  return readKey('PROMPT_AES_KEY_B64');
+};
 
-export const getApiAesKey = (): string =>
-  readKey('API_AES_KEY_B64', 'EXPO_PUBLIC_API_AES_KEY_B64');
+export const getApiAesKey = (): string => {
+  assertNoPublicKeyEnv('EXPO_PUBLIC_API_AES_KEY_B64');
+  return readKey('API_AES_KEY_B64');
+};
 
 export const getPromptKeyId = (): string =>
   readEnv('PROMPT_AES_KEY_ID', 'EXPO_PUBLIC_PROMPT_AES_KEY_ID') || DEFAULT_PROMPT_KEY_ID;

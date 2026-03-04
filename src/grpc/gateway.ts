@@ -16,6 +16,11 @@ export const GatewayOperation = {
 export type GatewayOperationValue =
   (typeof GatewayOperation)[keyof typeof GatewayOperation];
 
+type GatewayStatusEnvelope = {
+  success?: boolean;
+  message?: string;
+};
+
 const tryParseJson = (value: unknown): unknown => {
   if (typeof value !== 'string') {
     return value;
@@ -54,6 +59,17 @@ export const unwrapGatewayPayload = <T = unknown>(gatewayResponse: unknown): T =
   return gatewayResponse as T;
 };
 
+export const ensureGatewaySuccess = (gatewayResponse: unknown): void => {
+  if (!gatewayResponse || typeof gatewayResponse !== 'object') {
+    return;
+  }
+
+  const envelope = gatewayResponse as GatewayStatusEnvelope;
+  if (envelope.success === false) {
+    throw new Error(envelope.message || 'Gateway responded with success=false');
+  }
+};
+
 export const invokeEncryptedOperation = async (
   operation: GatewayOperationValue,
   plainPayload: unknown,
@@ -65,9 +81,12 @@ export const invokeEncryptedOperation = async (
     getApiKeyId()
   );
 
-  return invokeGateway({
+  const gatewayResponse = await invokeGateway({
     operation,
     payloadJson: JSON.stringify(encryptedPayload),
     token,
   });
+
+  ensureGatewaySuccess(gatewayResponse);
+  return gatewayResponse;
 };

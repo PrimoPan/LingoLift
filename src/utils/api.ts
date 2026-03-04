@@ -5,6 +5,7 @@ import {
   unwrapGatewayPayload,
   type GatewayOperationValue,
 } from '../grpc/gateway';
+import type { AesCipherPayload } from '../security/aes';
 
 type AiImageResponse = {
   imgurl?: string;
@@ -14,6 +15,13 @@ type AiImageResponse = {
   answer?: string;
 };
 
+type CipherPromptEnvelope = {
+  mode: 'cipher-only';
+  promptId?: string;
+  templateCipher: AesCipherPayload;
+  varsCipher?: AesCipherPayload | null;
+};
+
 const toError = (error: unknown, fallbackMessage: string): Error => {
   if (error instanceof Error) {
     return error;
@@ -21,14 +29,61 @@ const toError = (error: unknown, fallbackMessage: string): Error => {
   return new Error((error as { message?: string } | null)?.message || fallbackMessage);
 };
 
-const toCipherString = (input: unknown): string => {
-  if (typeof input === 'string') {
-    return input.trim();
+const isAesCipherPayload = (value: unknown): value is AesCipherPayload => {
+  if (!value || typeof value !== 'object') {
+    return false;
   }
+  const payload = value as Record<string, unknown>;
+  return (
+    payload.alg === 'AES-256-GCM' &&
+    typeof payload.keyId === 'string' &&
+    typeof payload.ivB64 === 'string' &&
+    typeof payload.tagB64 === 'string' &&
+    typeof payload.ciphertextB64 === 'string' &&
+    typeof payload.ts === 'number'
+  );
+};
+
+const isCipherPromptEnvelope = (value: unknown): value is CipherPromptEnvelope => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+  const payload = value as Record<string, unknown>;
+  if (payload.mode !== 'cipher-only' || !isAesCipherPayload(payload.templateCipher)) {
+    return false;
+  }
+  if (payload.varsCipher === undefined || payload.varsCipher === null) {
+    return true;
+  }
+  return isAesCipherPayload(payload.varsCipher);
+};
+
+const toCipherString = (input: unknown): string => {
   if (input === null || input === undefined) {
     return '';
   }
-  return JSON.stringify(input);
+
+  if (typeof input === 'string') {
+    const trimmed = input.trim();
+    if (!trimmed) {
+      return '';
+    }
+    try {
+      const parsed = JSON.parse(trimmed) as unknown;
+      if (isAesCipherPayload(parsed) || isCipherPromptEnvelope(parsed)) {
+        return trimmed;
+      }
+    } catch {
+      // fall-through to hard error below
+    }
+    throw new Error('Prompt must be encrypted JSON payload (cipher-only envelope).');
+  }
+
+  if (isAesCipherPayload(input) || isCipherPromptEnvelope(input)) {
+    return JSON.stringify(input);
+  }
+
+  throw new Error('Prompt must be encrypted JSON payload (cipher-only envelope).');
 };
 
 const unwrapAiResponse = (payload: unknown): unknown => {
