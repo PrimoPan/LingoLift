@@ -6,6 +6,12 @@
 
 LingoLift is an AI-assisted personalized education system for children with autism, developed by [HKUST(GZ) ARK Lab](https://arkxlab.github.io/).
 
+### Video Preview
+
+[![LingoLift Demo Preview](https://i0.hdslb.com/bfs/archive/98b6a6eac2594f68ebc63c022fdf7aee4dc16a00.jpg)](https://www.bilibili.com/video/BV1wUAezbErn/?spm_id_from=333.1387.homepage.video_card.click&vd_source=5ad1e219bd2b397ac4f69e99fc5f5361)
+
+Watch the demo on Bilibili: [LingoLift Video](https://www.bilibili.com/video/BV1wUAezbErn/?spm_id_from=333.1387.homepage.video_card.click&vd_source=5ad1e219bd2b397ac4f69e99fc5f5361)
+
 ### Highlights
 
 - Personalized lesson planning from child profiles
@@ -156,6 +162,12 @@ npx expo start --web
 ## 中文
 
 LingoLift 是一套面向孤独症儿童的 AI 个别化教育系统，由 [香港科技大学（广州）ARK Lab](https://arkxlab.github.io/) 开发。
+
+### 视频预览
+
+[![LingoLift 视频预览](https://i0.hdslb.com/bfs/archive/98b6a6eac2594f68ebc63c022fdf7aee4dc16a00.jpg)](https://www.bilibili.com/video/BV1wUAezbErn/?spm_id_from=333.1387.homepage.video_card.click&vd_source=5ad1e219bd2b397ac4f69e99fc5f5361)
+
+点击观看 Bilibili 演示视频：[LingoLift 演示视频](https://www.bilibili.com/video/BV1wUAezbErn/?spm_id_from=333.1387.homepage.video_card.click&vd_source=5ad1e219bd2b397ac4f69e99fc5f5361)
 
 ### 项目亮点
 
