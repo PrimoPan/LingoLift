@@ -1,6 +1,6 @@
 # LingoLift
 
-![LingoLift Opening](./assets/BG/Opening/Opening.png)
+
 
 ## English
 
